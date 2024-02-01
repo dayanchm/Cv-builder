@@ -1,9 +1,7 @@
 .pdf-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    /* Her kutunun genişliği */
     gap: 20px;
-    /* Kutular arası boşluk */
     padding: 20px;
 }
 
@@ -27,9 +25,6 @@
 .pdf-item p {
     margin: 10px 0;
 }
-
-
-
 form {
     width: 100%;
     max-width: 1600px;
@@ -112,7 +107,6 @@ h2 {
     color: #333;
     margin-bottom: 20px;
     font-weight: normal;
-    /* Başlık font kalınlığı */
 }
 
 input[type="text"],
@@ -127,7 +121,6 @@ select {
     border: 1px solid #ccc;
     box-sizing: border-box;
     font-size: 14px;
-    /* Giriş alanları font boyutu */
 }
 
 button {
@@ -141,19 +134,16 @@ button {
     border-radius: 4px;
     transition: background-color 0.4s;
     font-weight: bold;
-    /* Buton font kalınlığı */
 }
 
 button:hover {
     background-color: #0056b3;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    /* Buton hover durumunda gölge efekti */
 }
 
 @media (max-width: 768px) {
     form {
         width: 95%;
-        /* Mobil cihazlarda formun genişliğini artır */
     }
 
     .progress-bar li:before {
@@ -169,15 +159,11 @@ button:hover {
 
 .work-experience-entry:not(:first-child) .remove-btn {
     display: inline-block;
-    /* İlk giriş dışındakilerde göster */
     margin-top: 10px;
     padding: 5px 10px;
-    /* Küçük ve kibar boyut */
     font-size: 12px;
-    /* Küçük font boyutu */
     color: #fff;
     background-color: #ff4d4d;
-    /* Kırmızı arka plan */
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -185,9 +171,7 @@ button:hover {
 
 .add-btn {
     width: 100%;
-    /* Tam genişlik */
     padding: 10px 0;
-    /* Yükseklik ayarı */
     margin-top: 10px;
     font-size: 16px;
     color: #fff;
@@ -199,32 +183,20 @@ button:hover {
 
 .section {
     background-color: #ffffff;
-    /* Beyaz arka plan rengi */
     border: 1px solid #e0e0e0;
-    /* Açık gri kenarlık */
     padding: 20px;
-    /* İç boşluk */
     margin-bottom: 30px;
-    /* Altta boşluk */
     border-radius: 8px;
-    /* Yuvarlatılmış köşeler */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    /* Hafif gölge efekti */
 }
 
-/* Başlık stili */
 .section h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    /* Başlık altında boşluk */
     color: #007bff;
-    /* Başlık rengi */
     font-size: 18px;
-    /* Font boyutu */
     font-weight: 600;
-    /* Font kalınlığı */
     text-align: left;
-    /* Metin hizalaması */
 }
 
 .logo_text {
@@ -293,7 +265,7 @@ button:hover {
     text-align: start;
     padding-top: 10px;
 }
-input{
+input,textarea{
     outline: none;
 }
 

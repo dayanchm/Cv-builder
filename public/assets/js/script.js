@@ -264,3 +264,96 @@ function limitDisplayedItems(container, maxCount) {
         }
     }
 }
+
+
+// About Karakter Sınırı
+var isLimitExceeded = false;  
+
+function updateCharacterCount(textarea) {
+    var characterCountElement = document.getElementById('characterCount');
+    var currentCharacterCount = textarea.value.length;
+
+    if (!isLimitExceeded) {
+        if (currentCharacterCount >= 500) {
+            characterCountElement.textContent = '500/500';
+            characterCountElement.style.color = 'red';
+            isLimitExceeded = true;  
+            textarea.value = textarea.value.substring(0, 500);  
+        } else {
+            characterCountElement.textContent = currentCharacterCount + '/500';
+            characterCountElement.style.color = 'black';
+        }
+    } else {
+        isLimitExceeded = false;
+        characterCountElement.textContent = currentCharacterCount + '/500';
+        characterCountElement.style.color = 'black';
+    }
+}
+
+
+// Referance
+
+function toggleReferanceExperience() {
+    var container = document.getElementById('referanceExperienceContainer');
+    var icon = document.getElementById('toggleAdds');
+
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        icon.innerText = '-';
+    } else {
+        container.style.display = 'none';
+        icon.innerText = '+';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('referanceExperienceContainer');
+    if (container.childElementCount === 0) {
+        addDefaultReferanceExperience(container);
+    }
+
+    container.style.display = 'none';
+});
+
+function addDefaultReferanceExperience(container, index) {
+    var defaultEntry = document.createElement('div');
+    defaultEntry.classList.add('referance-experience');
+    defaultEntry.id = 'referance_' + index;
+
+    var inputNames = ['jobTitle', 'city', 'employer', ];
+
+    inputNames.forEach(function (name) {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'referance_' + index + '_' + name;
+        input.placeholder = name.charAt(0).toUpperCase() + name.slice(1) + ' Örn.';
+
+        defaultEntry.appendChild(input);
+    });
+
+    var textarea = document.createElement('textarea');
+    textarea.name = 'referance_' + index + '_description';
+    textarea.placeholder = 'Açıklama';
+
+    defaultEntry.appendChild(textarea);
+
+    var removeBtn = document.createElement('button');
+    removeBtn.innerText = 'Sil';
+    removeBtn.setAttribute('onclick', 'removeReferanceExperience(this)');
+    removeBtn.classList.add('remove-btn');
+    defaultEntry.appendChild(removeBtn);
+
+    container.appendChild(defaultEntry);
+}
+
+function addReferanceExperience() {
+    var container = document.getElementById('referanceExperienceContainer');
+    var newIndex = container.children.length; // Get the current count of child elements
+    addDefaultReferanceExperience(container, newIndex);
+    console.log('Added work experience entry:', index);
+}
+function removeReferanceExperience(button) {
+    var entry = button.parentNode;
+    var container = entry.parentNode;
+    container.removeChild(entry);
+}

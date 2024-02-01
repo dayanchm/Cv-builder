@@ -163,6 +163,10 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     } else {
         console.error('Skills are not defined or not an array.');
     }
+
+    // Yetenekler 
+    doc.moveDown(1);
+    
 }
 
 function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences) {

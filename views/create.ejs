@@ -79,22 +79,10 @@
                                     <h2>İş Bilgileri</h2>
                                     <div class="section">
                                         <h3>Hakkında</h3>
-                                        <textarea name="about" placeholder="Açıklama"></textarea>
-                                    </div>
-                                    <div class="section">
-                                        <h3 onclick="toggleWorkExperience()">İş Deneyimi <span id="toggleIcon">+</span></h3>
-                                        <div id="workExperienceContainer" class="work-experience-entry">
-                                            <div class="work-experience" id="experiences_0">
-                                                <input type="text" name="experiences[0][jobTitle]" placeholder="İş Ünvanı Örn. Satış Müdürü">
-                                                <input type="text" name="experiences[0][city]" placeholder="Şehir/Kasaba Örn. İstanbul">
-                                                <input type="text" name="experiences[0][employer]" placeholder="İşveren Örn. PwC">
-                                                <input type="text" name="experiences[0][startDate]" placeholder="Başlangıç Tarihi Örn. Eylül 2018">
-                                                <input type="text" name="experiences[0][endDate]" placeholder="Bitiş Tarihi Örn. Temmuz 2020">
-                                                <textarea name="experiences[0][description]" placeholder="Açıklama"></textarea>
-                                            </div>
-                                            
-                                        </div>
-                                        <button type="button" onclick="addWorkExperience()" class="add-btn">+ Yeni Ekle</button>
+                                        <textarea name="about" id="aboutTextarea" placeholder="Açıklama" rows="4" cols="50" 
+                                        oninput="updateCharacterCount(this)">
+                                       </textarea>
+                                        <p class="text-end" id="characterCount"></p>
                                     </div>
                                     <div class="section">
                                         <h3 onclick="toggleskills()">Yetkinlikler <span id="togglead">+</span></h3>
@@ -114,6 +102,33 @@
                                             </div>
                                         </div>
                                         <button type="button" onclick="addlangs()" class="add-btn">+ Yeni Ekle</button>
+                                    </div>
+                                    <div class="section">
+                                        <h3 onclick="toggleReferanceExperience()">Referanslar <span id="toggleAdds">+</span></h3>
+                                        <div id="referanceExperienceContainer" class="work-experience-entry">
+                                            <div class="referance-experience" id="referance_0">
+                                                <input type="text" name="referance[0][jobTitle]" placeholder="İsim. Satış Müdürü">
+                                                <input type="text" name="referance[0][city]" placeholder="Poziyon. UI/UX Design Takım Yöneticisi">
+                                                <input type="text" name="referance[0][employer]" placeholder="Telefon No. +90 555 555 55 55">
+                                            </div>
+                                            
+                                        </div>
+                                        <button type="button" onclick="addReferanceExperience()" class="add-btn">+ Yeni Ekle</button>
+                                    </div>
+                                    <div class="section">
+                                        <h3 onclick="toggleWorkExperience()">İş Deneyimi <span id="toggleIcon">+</span></h3>
+                                        <div id="workExperienceContainer" class="work-experience-entry">
+                                            <div class="work-experience" id="experiences_0">
+                                                <input type="text" name="experiences[0][jobTitle]" placeholder="İş Ünvanı Örn. Satış Müdürü">
+                                                <input type="text" name="experiences[0][city]" placeholder="Şehir/Kasaba Örn. İstanbul">
+                                                <input type="text" name="experiences[0][employer]" placeholder="İşveren Örn. PwC">
+                                                <input type="text" name="experiences[0][startDate]" placeholder="Başlangıç Tarihi Örn. Eylül 2018">
+                                                <input type="text" name="experiences[0][endDate]" placeholder="Bitiş Tarihi Örn. Temmuz 2020">
+                                                <textarea name="experiences[0][description]" placeholder="Açıklama"></textarea>
+                                            </div>
+                                            
+                                        </div>
+                                        <button type="button" onclick="addWorkExperience()" class="add-btn">+ Yeni Ekle</button>
                                     </div>
                                     <div>
                                         <button type="button" onclick="prevStep()">
