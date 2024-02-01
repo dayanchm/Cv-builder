@@ -1,0 +1,54 @@
+<footer class="wrapper bg-dark text-inverse">
+  <div class="container py-13 py-md-15">
+    <div class="row gy-6 gy-lg-0">
+      <div class="col-md-4 col-lg-3">
+        <div class="widget">
+          <h3 class="text-white" style="font-size: 30px;">Mobil CV</h3>
+          <p class="mb-4">© 2024 <a href="https://www.srndijital.com/" target="_blank">SRN Dijital</a> <br
+              class="d-none d-lg-block">All rights reserved.</p>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">İletişim Bilgilerimiz</h4>
+          <address class="pe-xl-15 pe-xxl-17"><%= setSiteList[0].addres %></address>
+          <a href="cdn-cgi/l/email-protection.html#6340"><span class="__cf_email__"
+              data-cfemail="4d24232b220d28202c2421632e2220"><%= setSiteList[0].email %></span></a><br> <%= setSiteList[0].number %>
+        </div>
+        <!-- /.widget -->
+      </div>
+      <!-- /column -->
+      <div class="col-md-4 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">Kurumsal</h4>
+          <ul class="list-unstyled  mb-0">
+            <li><a href="/about">Hakkımızda</a></li>
+            <li><a href="/price">Fiyatlandırma</a></li>
+            <li><a href="/cookie">Şartlar ve koşullar</a></li>
+            <li><a href="/contact">İletişim</a></li>
+          </ul>
+        </div>
+        <!-- /.widget -->
+      </div>
+      <!-- /column -->
+      <div class="col-md-12 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">Blog</h4>
+          <% if (blogFooterList && blogFooterList.length > 0) { %>
+            <div class="widget">
+              <% const lastThreeBlogs = blogFooterList.slice(-3); %>
+              <% lastThreeBlogs.forEach(blog => { %>
+                <p class="mb-5"><a href="/blog/<%= blog.slug %>"><%= blog.title %></a></p>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="progress-wrap">
+  <svg class="progress-circle svg-content" width="100%" height="100%" viewbox="-1 -1 102 102">
+    <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path>
+  </svg>
+</div>

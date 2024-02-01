@@ -1,0 +1,328 @@
+.pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Her kutunun genişliği */
+    gap: 20px;
+    /* Kutular arası boşluk */
+    padding: 20px;
+}
+
+.pdf-item.selected {
+    border-color: #007bff;
+    box-shadow: 0 0 10px #007bff;
+}
+
+.pdf-item {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.pdf-item img {
+    width: 100%;
+    height: auto;
+}
+
+.pdf-item p {
+    margin: 10px 0;
+}
+
+
+
+form {
+    width: 100%;
+    max-width: 1600px;
+    margin: 20px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+.progress-bar {
+    list-style-type: none;
+    padding: 0;
+    margin: 30px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.progress-bar li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+}
+
+.progress-bar li::before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    background-color: white;
+    color: #007bff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.progress-bar li.icon1::before {
+    content: "\f007";
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+.progress-bar li.icon2::before {
+    content: "\f328";
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 18px;
+}
+.progress-bar li.icon3::before {
+    content: "\f15b";
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 18px;
+}
+.progress-bar li.active::before,
+.progress-bar li.completed::before {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: normal;
+    /* Başlık font kalınlığı */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+    /* Giriş alanları font boyutu */
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 20px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.4s;
+    font-weight: bold;
+    /* Buton font kalınlığı */
+}
+
+button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Buton hover durumunda gölge efekti */
+}
+
+@media (max-width: 768px) {
+    form {
+        width: 95%;
+        /* Mobil cihazlarda formun genişliğini artır */
+    }
+
+    .progress-bar li:before {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+    }
+}
+
+.work-experience-entry {
+    margin-bottom: 15px;
+}
+
+.work-experience-entry:not(:first-child) .remove-btn {
+    display: inline-block;
+    /* İlk giriş dışındakilerde göster */
+    margin-top: 10px;
+    padding: 5px 10px;
+    /* Küçük ve kibar boyut */
+    font-size: 12px;
+    /* Küçük font boyutu */
+    color: #fff;
+    background-color: #ff4d4d;
+    /* Kırmızı arka plan */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-btn {
+    width: 100%;
+    /* Tam genişlik */
+    padding: 10px 0;
+    /* Yükseklik ayarı */
+    margin-top: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.section {
+    background-color: #ffffff;
+    /* Beyaz arka plan rengi */
+    border: 1px solid #e0e0e0;
+    /* Açık gri kenarlık */
+    padding: 20px;
+    /* İç boşluk */
+    margin-bottom: 30px;
+    /* Altta boşluk */
+    border-radius: 8px;
+    /* Yuvarlatılmış köşeler */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    /* Hafif gölge efekti */
+}
+
+/* Başlık stili */
+.section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    /* Başlık altında boşluk */
+    color: #007bff;
+    /* Başlık rengi */
+    font-size: 18px;
+    /* Font boyutu */
+    font-weight: 600;
+    /* Font kalınlığı */
+    text-align: left;
+    /* Metin hizalaması */
+}
+
+.logo_text {
+    font-size: 19px;
+}
+.mobile_resume{
+    margin: 0 20% 0 20%;
+}
+.mobile_blog {
+    margin: 0 10% 0 10%;
+}
+
+
+@media screen and (max-width:767px) and (min-width:300px) {
+    .title {
+        display: none;
+    }
+    .mobile_resume, .mobile_blog {
+        margin: 0 20px 0 20px;
+    }
+}
+
+.file-input-wrapper {
+    position: relative;
+    width: 180px; 
+    bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden-input {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1; 
+}
+
+.file-input-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30px;
+    width: 100px;
+    height: 100px;
+    background-image: url('../user.png') ;
+    background-size: cover;
+    border: 1px solid #ccc; 
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 0; 
+}
+
+.file-input-wrapper:hover::before {
+    opacity: 0.5; 
+}
+
+.file-input-wrapper:hover .hidden-input {
+    z-index: 12; 
+}
+.foto_label {
+    font-size: 12px;
+    text-align: start;
+    padding-top: 10px;
+}
+input{
+    outline: none;
+}
+
+.remove-btn {
+   background-color:  #ff4d4d;
+   padding: 10px;
+   border-radius: 5px;
+   color: #fff;
+}
+
+#templateImage {
+    max-width: 200px;
+    margin-top: 10px;
+
+}
+.template_select {
+    width: 200px;
+}
+.left_forward {
+    font-size: 16px;
+    cursor: pointer;
+    color: #3333334f;
+}
+.forward__left {
+    padding-top: 10px;
+}
+.button_width {
+    width: 100px;
+}
+.text__alt {
+   font-size: 12px;
+}

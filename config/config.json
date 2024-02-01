@@ -1,0 +1,38 @@
+{
+  "development": {
+    "username": "mobilcvc_cv",
+    "password": "nILiq,)jeE4{",
+    "database": "mobilcvc_cv",
+    "host": "141.95.3.62",
+    "dialect": "mysql",
+    "define": {
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci"
+    },
+    "logging":false
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "define": {
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci"
+    },
+    "logging":false
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "define": {
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci"
+    },
+    "logging":false
+  }
+}
