@@ -150,7 +150,7 @@ function addWorkExperience() {
     var container = document.getElementById('workExperienceContainer');
     var newIndex = container.children.length; // Get the current count of child elements
     addDefaultWorkExperience(container, newIndex);
-    console.log('Added work experience entry:', index);
+    console.log('Added work experience entry:', newIndex);
 }
 function removeWorkExperience(button) {
     var entry = button.parentNode;
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addDefaultReferanceExperience(container, index) {
     var defaultEntry = document.createElement('div');
-    defaultEntry.classList.add('referance-experience');
+    defaultEntry.classList.add('work-experience');
     defaultEntry.id = 'referance_' + index;
 
     var inputNames = ['jobTitle', 'city', 'employer', ];
@@ -326,16 +326,12 @@ function addDefaultReferanceExperience(container, index) {
         var input = document.createElement('input');
         input.type = 'text';
         input.name = 'referance_' + index + '_' + name;
-        input.placeholder = name.charAt(0).toUpperCase() + name.slice(1) + ' Örn.';
 
         defaultEntry.appendChild(input);
     });
 
     var textarea = document.createElement('textarea');
     textarea.name = 'referance_' + index + '_description';
-    textarea.placeholder = 'Açıklama';
-
-    defaultEntry.appendChild(textarea);
 
     var removeBtn = document.createElement('button');
     removeBtn.innerText = 'Sil';

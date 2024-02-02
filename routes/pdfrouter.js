@@ -26,29 +26,33 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
         const photoBuffer = req.file ? req.file.buffer : null;
 
         const experiences = req.body.experiences;
-        
+
         const skilss = req.body.skilles;
 
         const langss = req.body.langs;
 
+        const referance = req.body.referance;
+
+        const randomString = Math.random().toString(36).substring(2, 8);
+        const fileName = `mobilecv-${randomString}.pdf`;
         const doc = new PDFDocument();
 
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=mobilecv.pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
         doc.pipe(res);
 
         doc.font('Helvetica');
         if (template === 'template1') {
-            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss,experiences);
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
         } else if (template === 'template2') {
-            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss,experiences);
-        } else if (template === 'template3'){
-            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss,experiences);
-        }else if (template === 'template4'){
-            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss,experiences);
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
+        } else if (template === 'template3') {
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
+        } else if (template === 'template4') {
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
         }
         else {
-            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position);
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
         }
 
         doc.end();
@@ -58,7 +62,7 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
     }
 });
 
-function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs) {
+function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -110,13 +114,13 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     doc.circle(80, lineY, pointSize).fill('#4b30c9');
 
 
-      // Yabancı Dil
-    
-      doc.moveDown(1);
-      doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 480, { align: 'left' });
-      doc.moveDown(0.5);
-  
-      if (langs && Array.isArray(langs)) {
+    // Yabancı Dil
+
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 480, { align: 'left' });
+    doc.moveDown(0.5);
+
+    if (langs && Array.isArray(langs)) {
         langs.forEach((langg, index) => {
             if (langg && typeof langg === 'object' && langg.lang) {
                 if (index !== 0) {
@@ -128,7 +132,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
                     .fontSize(10)
                     .fillColor('black')
                     .lineGap(6)
-                    .text(`• ${langLines.join('\n• ')}`, { align: 'left', width:200});
+                    .text(`• ${langLines.join('\n• ')}`, { align: 'left', width: 200 });
             } else {
                 console.error(`Invalid lang at index ${index}.`);
             }
@@ -137,12 +141,12 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Languages are not defined or not an array.');
     }
 
-  
-      // Yetkinlikler
-      doc.moveDown(1);
-      doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 360, { align: 'left' });
 
-      if (skilles && Array.isArray(skilles)) {
+    // Yetkinlikler
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 360, { align: 'left' });
+
+    if (skilles && Array.isArray(skilles)) {
         skilles.forEach((skill, index) => {
             if (skill && typeof skill === 'object' && skill.skil) {
                 if (index !== 0) {
@@ -155,7 +159,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
                     .fontSize(10)
                     .fillColor('black')
                     .lineGap(5)
-                    .text(`• ${skillLines.join('\n• ')}`, { align: 'left',width:200 });
+                    .text(`• ${skillLines.join('\n• ')}`, { align: 'left', width: 200 });
             } else {
                 console.error(`Invalid skill at index ${index}.`);
             }
@@ -166,10 +170,10 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
 
     // Yetenekler 
     doc.moveDown(1);
-    
+
 }
 
-function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences) {
+function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -203,7 +207,7 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
     const contactInfoY = 230;
     doc.x = contactInfoX;
     doc.y = contactInfoY;
-    
+
     doc.font(RobotoBold).fontSize(14).fillColor('white').text('İLETİŞİM BİLGİLERİ', { align: 'left' });
     // E-posta
     doc.moveDown(1.3);
@@ -233,82 +237,141 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
         doc.image(photoBuffer, 60, 45, { width: 140, height: 140 });
     }
 
-    // İş deneyimi
-    doc.moveDown(2);
-    doc.font(RobotoMedium).fontSize(14).fillColor('black').text('İŞ DENEYİMİ', centerX + 20, verticalOffset + 180, { align: 'left' });
-    doc.moveDown(1);
+    const contactRefX = 35;
+    const contactRefY = 230;
+    doc.x = contactRefX;
+    doc.y = contactRefY;
 
-    const transformExperiences = (experiences) => {
-        return experiences.map((experience) => {
-            return {
-                jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
-                city: Array.isArray(experience.city) ? experience.city : [experience.city],
-                employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
-                startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
-                endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
-                description: Array.isArray(experience.description) ? experience.description : [experience.description],
-            };
+    const addSection = (title, content) => {
+        const startX = 250;
+        const startY = (doc.y !== undefined && doc.y !== null) ? doc.y : 30;
+
+        doc.font(RobotoMedium).fontSize(14).fillColor('black').text(title, startX, startY, { align: 'left' });
+        doc.moveDown(1);
+        content();
+        const endY = doc.y + 20; // Bölümün altındaki boşluk (isteğe bağlı)
+        doc.y = Math.max(startY, endY); // Yeni bölümün başlaması gereken dikey pozisyonu belirle
+    };
+
+    const addExperiencesSection = () => {
+        const transformExperiences = (experiences) => {
+            console.log('Input Experiences:', experiences);
+            return experiences.map((experience) => {
+                console.log('Processing Experience:', experience);
+                return {
+                    jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
+                    city: Array.isArray(experience.city) ? experience.city : [experience.city],
+                    employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
+                    startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
+                    endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
+                    description: Array.isArray(experience.description) ? experience.description : [experience.description],
+                };
+            });
+        };
+
+        const transformedExperiences = transformExperiences(experiences || []);
+        console.log('Transformed Experiences:', transformedExperiences);
+        transformedExperiences.forEach((experience, index) => {
+            if (Array.isArray(experience.jobTitle) &&
+                Array.isArray(experience.employer) &&
+                Array.isArray(experience.city) &&
+                Array.isArray(experience.description)) {
+                
+                if (index !== 0) {
+                    doc.moveDown(1);
+                }
+    
+                experience.jobTitle.forEach(title => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${title}`, { align: 'left' });
+                });
+    
+                experience.employer.forEach(emp => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left' });
+                });
+    
+                experience.city.forEach(cty => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
+                });
+    
+                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
+    
+                experience.description.forEach(desc => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${desc}`, { align: 'left' });
+                });
+            } else {
+                console.error(`Invalid experience at index ${index}. One or more fields are not arrays.`);
+            }
         });
     };
-    
-    const transformedExperiences = transformExperiences(experiences || []);
-    transformedExperiences.forEach((experience, index) => {
-        if (experience && typeof experience === 'object') {
-            if (index !== 0) {
-                doc.moveDown(1);
-            }
 
-            experience.jobTitle.forEach(title => {
-                doc.font(Roboto).fontSize(10).fillColor('black').text(`Job Title: ${title}`, { align: 'left' });
+    const addReferencesSection = () => {
+        const transformRefenerce = (referance) => {
+            return referance.map((referance) => {
+                return {
+                    jobTitle: Array.isArray(referance.jobTitle) ? referance.jobTitle : [referance.jobTitle],
+                    city: Array.isArray(referance.city) ? referance.city : [referance.city],
+                    employer: Array.isArray(referance.employer) ? referance.employer : [referance.employer],
+                };
             });
+        };
 
-            experience.employer.forEach(emp => {
-                doc.font(Roboto).fontSize(10).fillColor('black').text(`Employer: ${emp}`, { align: 'left' });
-            });
-
-            experience.city.forEach(cty => {
-                doc.font(Roboto).fontSize(10).fillColor('black').text(`City: ${cty}`, { align: 'left' });
-            });
-
-            doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`Dates: ${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
-
-            experience.description.forEach(desc => {
-                doc.font(Roboto).fontSize(10).fillColor('black').text(`Description: ${desc}`, { align: 'left' });
-            });
-        } else {
-            console.error(`Invalid experience at index ${index}.`);
-        }
-    });
-
-    // Yetenekler
-    doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('white').text('YETENEKLER', contactInfoX, contactInfoY + 220, { align: 'left' });
-    doc.moveDown(0.5);
-
-    const maxSkillsToShow = 5;
-
-    if (skilles && Array.isArray(skilles)) {
-        for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
-            const skill = skilles[index];
-            if (skill && typeof skill === 'object' && skill.skil) {
+        const transformedRefenerce = transformRefenerce(referance || []);
+        transformedRefenerce.forEach((referance, index) => {
+            if (referance && typeof referance === 'object') {
                 if (index !== 0) {
-                    doc.moveDown(0.5);
+                    doc.moveDown(1);
                 }
-                const skillText = `${skill.skil}`;
-                const skillLines = skillText.split(',').map(line => line.trim());
-    
-                doc.font(Roboto)
-                    .fontSize(12)
-                    .fillColor('white')
-                    .lineGap(6)
-                    .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+                referance.jobTitle.forEach(title => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(` ${title}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.employer.forEach(emp => {
+                    doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${emp}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.city.forEach(cty => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
+                });
             } else {
-                console.error(`Invalid skill at index ${index}.`);
+                console.error(`Invalid experience at index ${index}.`);
             }
-        }
-    } else {
-        console.error('Skills are not defined or not an array.');
-    }
+        });
+    };
+
+    addSection('İŞ DENEYİMİ', addExperiencesSection);
+    addSection('REFERANSLAR', addReferencesSection);
+
+
+
+      // Yetenekler
+      doc.moveDown(1);
+      doc.font(RobotoBold).fontSize(14).fillColor('white').text('YETENEKLER', contactInfoX, contactInfoY + 240, { align: 'left' });
+      doc.moveDown(0.5);
+  
+      const maxSkillsToShow = 5;
+  
+      if (skilles && Array.isArray(skilles)) {
+          for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
+              const skill = skilles[index];
+              if (skill && typeof skill === 'object' && skill.skil) {
+                  if (index !== 0) {
+                      doc.moveDown(0.5);
+                  }
+                  const skillText = `${skill.skil}`;
+                  const skillLines = skillText.split(',').map(line => line.trim());
+      
+                  doc.font(Roboto)
+                      .fontSize(12)
+                      .fillColor('white')
+                      .lineGap(6)
+                      .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+              } else {
+                  console.error(`Invalid skill at index ${index}.`);
+              }
+          }
+      } else {
+          console.error('Skills are not defined or not an array.');
+      }
 
     // Dil Becerileri
     doc.moveDown(2);
@@ -316,7 +379,7 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
 
     const maxLanguagesToShow = 5;
     let displayedLanguages = 0;
-    
+
     if (langs && Array.isArray(langs)) {
         langs.forEach((langg, index) => {
             if (displayedLanguages < maxLanguagesToShow && langg && typeof langg === 'object' && langg.lang) {
@@ -330,7 +393,7 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
                     .fillColor('white')
                     .lineGap(6)
                     .text(`- ${langLines.join('\n- ')}`, { align: 'left' });
-    
+
                 displayedLanguages++;
             } else {
                 console.error(`Invalid lang at index ${index}.`);
@@ -340,9 +403,11 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Languages are not defined or not an array.');
     }
 
+    
+
 }
 
-function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs) {
+function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -371,7 +436,7 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
 
 }
 
-function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs) {
+function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -389,7 +454,7 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
 
 }
 
-function applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site) {
+function applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
     doc.rect(0, 0, doc.page.width, doc.page.height).fill('lightgray');
     doc.fontSize(20).text('Default Template - Curriculum Vitae', { align: 'center', fillColor: 'blue' });
     doc.fillColor('black');
