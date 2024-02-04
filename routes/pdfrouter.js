@@ -62,13 +62,12 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
     }
 });
 
-function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
+function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
     const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
-
 
     // Adı Soyadı
     const verticalOffset = 80;
@@ -81,7 +80,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
 
     // İletişim Bilgileri
     const contactInfoX = 400;
-    const contactInfoY = 260;
+    const contactInfoY = 290;
     doc.x = contactInfoX;
     doc.y = contactInfoY;
 
@@ -108,16 +107,16 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     }
 
     // Yan çizgiler 
-    const lineY = 260;
+    const lineY = 300;
     const pointSize = 3;
     doc.lineCap('butt').lineWidth(1.5).moveTo(0, lineY).lineTo(80, lineY).stroke('#4b30c9');
     doc.circle(80, lineY, pointSize).fill('#4b30c9');
 
 
-    // Yabancı Dil
+    // Dil Becerleri
 
     doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 480, { align: 'left' });
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 520, { align: 'left' });
     doc.moveDown(0.5);
 
     if (langs && Array.isArray(langs)) {
@@ -141,10 +140,9 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Languages are not defined or not an array.');
     }
 
-
     // Yetkinlikler
     doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 360, { align: 'left' });
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 400, { align: 'left', width:100});
 
     if (skilles && Array.isArray(skilles)) {
         skilles.forEach((skill, index) => {
@@ -168,8 +166,109 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Skills are not defined or not an array.');
     }
 
-    // Yetenekler 
+    // Yetkinlikler 
     doc.moveDown(1);
+
+    const contactRefX = 35;
+    const contactRefY = 290;
+    doc.x = contactRefX;
+    doc.y = contactRefY;
+
+    const addSection = (title, content) => {
+        const startX = 100;
+        const startY = (doc.y !== undefined && doc.y !== null) ? doc.y : 30;
+
+        doc.font(RobotoMedium).fontSize(14).fillColor('black').text(title, startX, startY, { align: 'left' });
+        doc.moveDown(1);
+        content();
+        const endY = doc.y + 20; 
+        doc.y = Math.max(startY, endY);
+    };
+
+    const addExperiencesSection = () => {
+        const transformExperiences = (experiences) => {
+            return experiences.map((experience) => {
+                return {
+                    jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
+                    city: Array.isArray(experience.city) ? experience.city : [experience.city],
+                    employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
+                    startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
+                    endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
+                    description: Array.isArray(experience.description) ? experience.description : [experience.description],
+                };
+            });
+        };
+
+        const transformedExperiences = transformExperiences(experiences || []);
+        transformedExperiences.forEach((experience, index) => {
+            if (Array.isArray(experience.jobTitle) &&
+                Array.isArray(experience.employer) &&
+                Array.isArray(experience.city) &&
+                Array.isArray(experience.description)) {
+                
+                if (index !== 0) {
+                    doc.moveDown(1);
+                }
+    
+                experience.jobTitle.forEach(title => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${title}`, { align: 'left' });
+                });
+    
+                experience.employer.forEach(emp => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left' });
+                });
+    
+                experience.city.forEach(cty => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
+                });
+    
+                doc.font(RobotoBold).fontSize(10).fillColor('#4b30c9').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
+    
+                experience.description.forEach(desc => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${desc}`, { align: 'left' });
+                });
+            } else {
+                console.error(`Invalid experience at index ${index}. One or more fields are not arrays.`);
+            }
+        });
+    };
+
+    const addReferencesSection = () => {
+        const transformRefenerce = (referance) => {
+            return referance.map((referance) => {
+                return {
+                    jobTitle: Array.isArray(referance.jobTitle) ? referance.jobTitle : [referance.jobTitle],
+                    city: Array.isArray(referance.city) ? referance.city : [referance.city],
+                    employer: Array.isArray(referance.employer) ? referance.employer : [referance.employer],
+                };
+            });
+        };
+
+        const transformedRefenerce = transformRefenerce(referance || []);
+        transformedRefenerce.forEach((referance, index) => {
+            if (referance && typeof referance === 'object') {
+                if (index !== 0) {
+                    doc.moveDown(0.5);
+                }
+                referance.jobTitle.forEach(title => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(` ${title}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.employer.forEach(emp => {
+                    doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${emp}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.city.forEach(cty => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
+                });
+            } else {
+                console.error(`Invalid experience at index ${index}.`);
+            }
+        });
+    };
+
+    addSection('İş deneyimi', addExperiencesSection);
+    addSection('Referanslar', addReferencesSection);
 
 }
 
