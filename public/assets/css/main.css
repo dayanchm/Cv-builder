@@ -6,8 +6,8 @@
 }
 
 .pdf-item.selected {
-    border-color: #007bff;
-    box-shadow: 0 0 10px #007bff;
+    border-color: #000000;
+    box-shadow: 0 0 10px #000000;
 }
 
 .pdf-item {
@@ -69,10 +69,10 @@ form {
     width: 40px;
     height: 40px;
     line-height: 40px;
-    border: 2px solid #007bff;
+    border: 2px solid #000000;
     border-radius: 50%;
     background-color: white;
-    color: #007bff;
+    color: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,9 +98,9 @@ form {
 }
 .progress-bar li.active::before,
 .progress-bar li.completed::before {
-    background-color: #007bff;
+    background-color: #000000;
     color: white;
-    border-color: #007bff;
+    border-color: #000000;
 }
 
 h2 {
@@ -124,7 +124,7 @@ select {
 }
 
 button {
-    background-color: #007BFF;
+    background-color: #000000;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -137,7 +137,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #333;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -175,7 +175,7 @@ button:hover {
     margin-top: 10px;
     font-size: 16px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #000000;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -193,7 +193,7 @@ button:hover {
 .section h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    color: #007bff;
+    color: #000000;
     font-size: 18px;
     font-weight: 600;
     text-align: left;
@@ -204,6 +204,9 @@ button:hover {
 }
 .mobile_resume{
     margin: 0 5% 0 5%;
+}
+.mobile_resume2{
+    margin: 0 20% 0 20%;
 }
 .mobile_blog {
     margin: 0 10% 0 10%;

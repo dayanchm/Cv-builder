@@ -15,10 +15,7 @@ const {
 } =require ("../controller/adminController.js")
 const {SitesController} = require("../controller/siteController.js")
 const {CommentsController} = require("../controller/commentController.js")
-
-
-
-
+const {SeoController} = require("../controller/seoController.js")
 
 // Site
 router.get('/', SiteController.getIndexpage);
@@ -36,6 +33,8 @@ router.get("/contact-form", SiteController.getContactForm)
 router.get('/login', SiteController.getLogin)
 router.get('/resume_service', SiteController.getResumService)
 
+
+// Blog
 
 router.get("/panel", authMiddleware,AdminController.getPanel)
 router.get("/panel/blogs", authMiddleware, AdminController.getBlog)
@@ -114,5 +113,13 @@ router.delete("/panel/curriculums/:id", authMiddleware, CirriculumController.del
 router.get("/panel/curriculum/edit/:id", authMiddleware, CirriculumController.editCirrulum);
 router.put('/panel/curriculum/:id', authMiddleware, CirriculumController.updateCirrulum);
 
+
+// Seo
+router.get("/panel/seo", authMiddleware, SeoController.getSeo)
+router.post("/panel/seos", authMiddleware, SeoController.postSeo)
+router.get("/panel/seo/add", authMiddleware, SeoController.getSeoAdd)
+router.delete("/panel/seo/:id", authMiddleware, SeoController.deleteSeo)
+router.get("/panel/seo/edit/:id", authMiddleware, SeoController.editSeo);
+router.put('/panel/seo/:id', authMiddleware, SeoController.updateSeo);
 
 module.exports = router;

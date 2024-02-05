@@ -75,7 +75,10 @@ class SiteController {
     }
     static async getBlog(req, res) {
         try {
-            const Blogiest = await Blog.findAll();
+            const loca = await Blog.findAll();
+
+            const Blogiest = loca.slice(0,10);
+            
             res.render('blog', { blogList: Blogiest });
         } catch (error) {
             console.log(error);
@@ -103,27 +106,24 @@ class SiteController {
     static async getSlugBlog(req, res) {
         try {
             const { slug } = req.params;
-
+    
             if (!slug) {
                 return res.status(400).send("Slug parameter is missing");
             }
-
+    
             const blogDetail = await Blog.findOne({
                 where: {
                     slug: slug,
                 },
             });
-
+    
             if (!blogDetail) {
                 return res.status(404).send("Blog not found");
             }
+    
             const sanitizedDetail = DOMPurify.sanitize(blogDetail.detail);
-
-            const blogDetailJSON = blogDetail.toJSON();
-
-            blogDetailJSON.detail = sanitizedDetail;
-
-            res.render('blog_detail', { blogDetail: blogDetailJSON });
+    
+            res.render('blog_detail', { blogDetail: { ...blogDetail.toJSON(), detail: sanitizedDetail } });
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
@@ -204,7 +204,6 @@ class AuthController {
             res.status(500).render('auth/login');
         }
     }
-
     static async LogoutUser(req, res) {
         try {
             req.session.destroy((err) => {
