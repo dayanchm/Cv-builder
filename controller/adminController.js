@@ -343,7 +343,7 @@ class ResumeController {
     }
     static async updateResume(req, res) {
         try {
-            upload.fields([{ name: 'img', maxCount: 1 }, { name: 'pdf', maxCount: 1 }])(req, res, async (err) => {
+            upload(req, res, async (err) => {
                 if (err) {
                     req.flash('error', 'Dosya yüklenirken bir hata oluştu: ' + err.message);
                     return res.redirect('/panel/comment');
@@ -390,7 +390,6 @@ class ResumeController {
         }
     }
     
-
 }
 
 class FaqController {

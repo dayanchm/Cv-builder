@@ -25,14 +25,14 @@
     }
 </style>
 
-<body class="box-layout">
+<body>
     <div class="content-wrapper bg-light">
     <%- include('./components/header'); -%>
         <section class="wrapper gradient-8 bg-lines">
             <div class="container pt-17 pt-md-19 pb-21 pb-lg-23 text-center">
                 <div class="row">
-                    <div class="col-lg-10 col-xl-9 col-xxl-8 mx-auto" data-cues="zoomOut" data-group="page-title"
-                        data-interval="200" data-delay="200">
+                    <div class="col-lg-10 col-sm-12 mx-auto" data-cues="zoomOut" data-group="page-title"
+                        data-interval="200" data-delay="100">
                         <div class="d-flex justify-content-center mb-4" data-cues="zoomOut"
                             data-group="page-title-buttons" data-delay="100">
                             <form id="multiStepForm cvForm" method="post" action="/create-cv-pdf"
@@ -42,9 +42,8 @@
                                     <li class="icon2 pb-6">İş Bilgiler</li>
                                     <li class="icon3 pb-6">Son Adım</li>
                                 </ul>
-
                                 <div class="step active">
-                                    <h2>Kişisel Bilgiler</h2>
+                                    <h2 class="ha__title">Kişisel Bilgiler</h2>
                                     <div class="row">
                                         <div class="col-lg-3 col-sm-12">
                                             <div class="file-input-wrapper">
@@ -82,13 +81,14 @@
                                     </div>
                                 </div>
                                 <div class="step">
-                                    <h2>İş Bilgileri</h2>
+                                    <h2 class="ha__title">İş Bilgileri</h2>
+                                   <!-- Hakkımızda -->
                                     <div class="section">
                                         <h3>Hakkında</h3>
                                         <textarea name="about" id="aboutTextarea" placeholder="Açıklama" rows="4" cols="50" oninput="updateCharacterCount(this)"></textarea>
                                         <p class="text-end" id="characterCount"></p>
                                     </div>
-                                    
+                                   <!-- Yetkinlikler -->
                                     <div class="section">
                                         <h3 onclick="toggleskills()">Yetkinlikler <span id="togglead">+</span></h3>
                                         <div id="workskills" class="work-experience-entry">
@@ -99,6 +99,7 @@
                                         </div>
                                         <button type="button" onclick="addskills()" class="add-btn">+ Yeni Ekle</button>
                                     </div>
+                                     <!-- Yabancı Dil  -->
                                     <div class="section">
                                         <h3 onclick="togglelangs()">Yabancı Dil <span id="togglelang">+</span></h3>
                                         <div id="worklangs" class="work-experience-entry">
@@ -109,6 +110,7 @@
                                         </div>
                                         <button type="button" onclick="addlangs()" class="add-btn">+ Yeni Ekle</button>
                                     </div>
+                                     <!-- Referanslar  -->
                                     <div class="section">
                                         <h3 onclick="toggleReferanceExperience()">Referanslar <span id="toggleAdds">+</span></h3>
                                         <div id="referanceExperienceContainer" class="work-experience-entry">
@@ -121,6 +123,7 @@
                                         </div>
                                         <button type="button" onclick="addReferanceExperience()" class="add-btn">+ Yeni Ekle</button>
                                     </div>
+                                    <!-- İş Deneyimi -->
                                     <div class="section">
                                         <h3 onclick="toggleWorkExperience()">İş Deneyimi <span id="toggleIcon">+</span></h3>
                                         <div id="workExperienceContainer" class="work-experience-entry">
@@ -136,6 +139,22 @@
                                         </div>
                                         <button type="button" onclick="addWorkExperience()" class="add-btn">+ Yeni Ekle</button>
                                     </div>
+                                    <!-- Akademik Kariyer -->
+                                    <div class="section">
+                                        <h3 onclick="toggleAcademiExperience()">Akademik Kariyer <span id="academiIcon">+</span></h3>
+                                        <div id="academiExperienceContainer" class="work-experience-entry">
+                                            <div class="academi-experience" id="academi_0">
+                                                <input type="text" name="academi[0][jobTitle]" placeholder="Okul, Universite İsmi">
+                                                <input type="text" name="academi[0][city]" placeholder="Programı">
+                                                <input type="text" name="academi[0][employer]" placeholder="Lisans, ÖnLisans ">
+                                                <input type="text" name="academi[0][startDate]" placeholder="Başlangıç Tarihi Örn. Eylül 2018">
+                                                <input type="text" name="academi[0][endDate]" placeholder="Bitiş Tarihi Örn. Temmuz 2020">
+                                                <textarea name="academi[0][description]" placeholder="Açıklama"></textarea>
+                                            </div>
+                                            
+                                        </div>
+                                        <button type="button" onclick="addAcademiExperience()" class="add-btn">+ Yeni Ekle</button>
+                                    </div>
                                     <div>
                                         <button type="button" onclick="prevStep()">
                                             <i class="fa-solid fa-angle-left"></i>
@@ -145,7 +164,7 @@
                                     </div>
                                 </div>
                                 <div class="step">
-                                    <h2>Son Adım</h2>
+                                    <h2 class="ha__title">Son Adım</h2>
 
                                     <label for="template">Template Seç</label>
                                     <select name="template" id="template">
@@ -160,7 +179,9 @@
                                         </div>
                                         
                                         <div class="forward__left">
-                                            <a  onclick="prevStep()" class="left_forward"><i class="fa-solid fa-angle-left"></i> Geri</a>
+                                            <button type="button" onclick="prevStep()">
+                                                <i class="fa-solid fa-angle-left"></i>
+                                                Geri</button>
                                         </div>
                                     </div>
                                 </div>

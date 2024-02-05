@@ -143,12 +143,12 @@ button:hover {
 
 @media (max-width: 768px) {
     form {
-        width: 95%;
+        width: 100%;
     }
 
     .progress-bar li:before {
-        width: 20px;
-        height: 20px;
+        width: 40px;
+        height: 40px;
         line-height: 20px;
     }
 }
@@ -212,16 +212,10 @@ button:hover {
     margin: 0 10% 0 10%;
 }
 
-
-@media screen and (max-width:767px) and (min-width:300px) {
-    .title {
-        display: none;
-    }
-    .mobile_resume, .mobile_blog {
-        margin: 0 20px 0 20px;
-    }
+.card_flex{
+    display: flex;
+    flex-direction: row;
 }
-
 .file-input-wrapper {
     position: relative;
     width: 180px; 
@@ -310,4 +304,35 @@ input,textarea{
 }
 .btn_dark:hover{
     background-color: #333;
+}
+.header__add {
+    z-index: 100;
+    background-image: linear-gradient(-60deg, #ff3b00, #FF9843);
+    position: fixed;
+}
+
+
+@media screen and (max-width:767px) and (min-width:300px) {
+    .title {
+        display: none;
+    }
+    .mobile_resume, .mobile_blog {
+        margin: 0 20px 0 20px;
+    }
+    .mobile_resume2{
+        margin: 0 0 0 0;
+    }
+    .card_flex{
+        display: flex;
+        flex-direction: column;
+    }
+    .file-input-wrapper {
+       left: 50px;
+       padding-top: 20px;
+       padding-bottom: 20px;
+    }
+    .ha__title{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 }

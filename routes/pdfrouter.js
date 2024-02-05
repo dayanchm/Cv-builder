@@ -142,7 +142,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
 
     // Yetkinlikler
     doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 400, { align: 'left', width:100});
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 400, { align: 'left', width: 100 });
 
     if (skilles && Array.isArray(skilles)) {
         skilles.forEach((skill, index) => {
@@ -181,7 +181,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
         doc.font(RobotoMedium).fontSize(14).fillColor('black').text(title, startX, startY, { align: 'left' });
         doc.moveDown(1);
         content();
-        const endY = doc.y + 20; 
+        const endY = doc.y + 20;
         doc.y = Math.max(startY, endY);
     };
 
@@ -205,27 +205,27 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
                 Array.isArray(experience.employer) &&
                 Array.isArray(experience.city) &&
                 Array.isArray(experience.description)) {
-                
+
                 if (index !== 0) {
                     doc.moveDown(1);
                 }
-    
+
                 experience.jobTitle.forEach(title => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${title}`, { align: 'left' });
                 });
-    
+
                 experience.employer.forEach(emp => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left' });
                 });
-    
+
                 experience.city.forEach(cty => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
                 });
-    
+
                 doc.font(RobotoBold).fontSize(10).fillColor('#4b30c9').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
-    
+
                 experience.description.forEach(desc => {
-                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${desc}`, { align: 'left' });
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${desc}`, { align: 'left', width: 200 });
                 });
             } else {
                 console.error(`Invalid experience at index ${index}. One or more fields are not arrays.`);
@@ -348,55 +348,41 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
         doc.font(RobotoMedium).fontSize(14).fillColor('black').text(title, startX, startY, { align: 'left' });
         doc.moveDown(1);
         content();
-        const endY = doc.y + 20; // Bölümün altındaki boşluk (isteğe bağlı)
-        doc.y = Math.max(startY, endY); // Yeni bölümün başlaması gereken dikey pozisyonu belirle
+        const endY = doc.y + 15;
+        doc.y = Math.max(startY, endY);
     };
 
     const addExperiencesSection = () => {
         const transformExperiences = (experiences) => {
-            console.log('Input Experiences:', experiences);
             return experiences.map((experience) => {
-                console.log('Processing Experience:', experience);
                 return {
                     jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
-                    city: Array.isArray(experience.city) ? experience.city : [experience.city],
                     employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
                     startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
                     endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
-                    description: Array.isArray(experience.description) ? experience.description : [experience.description],
                 };
             });
         };
 
         const transformedExperiences = transformExperiences(experiences || []);
-        console.log('Transformed Experiences:', transformedExperiences);
         transformedExperiences.forEach((experience, index) => {
             if (Array.isArray(experience.jobTitle) &&
-                Array.isArray(experience.employer) &&
-                Array.isArray(experience.city) &&
-                Array.isArray(experience.description)) {
-                
+                Array.isArray(experience.employer)) {
+
                 if (index !== 0) {
-                    doc.moveDown(1);
+                    doc.moveDown(0.2);
                 }
-    
+
                 experience.jobTitle.forEach(title => {
-                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${title}`, { align: 'left' });
+                    doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${title}`, { align: 'left' });
                 });
-    
+
+                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
+
                 experience.employer.forEach(emp => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left' });
                 });
-    
-                experience.city.forEach(cty => {
-                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
-                });
-    
-                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left' });
-    
-                experience.description.forEach(desc => {
-                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${desc}`, { align: 'left' });
-                });
+
             } else {
                 console.error(`Invalid experience at index ${index}. One or more fields are not arrays.`);
             }
@@ -442,35 +428,35 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
 
 
 
-      // Yetenekler
-      doc.moveDown(1);
-      doc.font(RobotoBold).fontSize(14).fillColor('white').text('YETENEKLER', contactInfoX, contactInfoY + 240, { align: 'left' });
-      doc.moveDown(0.5);
-  
-      const maxSkillsToShow = 5;
-  
-      if (skilles && Array.isArray(skilles)) {
-          for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
-              const skill = skilles[index];
-              if (skill && typeof skill === 'object' && skill.skil) {
-                  if (index !== 0) {
-                      doc.moveDown(0.5);
-                  }
-                  const skillText = `${skill.skil}`;
-                  const skillLines = skillText.split(',').map(line => line.trim());
-      
-                  doc.font(Roboto)
-                      .fontSize(12)
-                      .fillColor('white')
-                      .lineGap(6)
-                      .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
-              } else {
-                  console.error(`Invalid skill at index ${index}.`);
-              }
-          }
-      } else {
-          console.error('Skills are not defined or not an array.');
-      }
+    // Yetenekler
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('white').text('YETENEKLER', contactInfoX, contactInfoY + 240, { align: 'left' });
+    doc.moveDown(0.5);
+
+    const maxSkillsToShow = 5;
+
+    if (skilles && Array.isArray(skilles)) {
+        for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
+            const skill = skilles[index];
+            if (skill && typeof skill === 'object' && skill.skil) {
+                if (index !== 0) {
+                    doc.moveDown(0.5);
+                }
+                const skillText = `${skill.skil}`;
+                const skillLines = skillText.split(',').map(line => line.trim());
+
+                doc.font(Roboto)
+                    .fontSize(12)
+                    .fillColor('white')
+                    .lineGap(6)
+                    .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+            } else {
+                console.error(`Invalid skill at index ${index}.`);
+            }
+        }
+    } else {
+        console.error('Skills are not defined or not an array.');
+    }
 
     // Dil Becerileri
     doc.moveDown(2);
@@ -502,21 +488,46 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Languages are not defined or not an array.');
     }
 
-    
+
 
 }
 
-function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
+function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
-
-    const scaleX = 0.7;
+    const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
+    const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
 
     doc.rect(0, 0, 1920, 1000).fill('#fef9f9');
-    doc.rect(-2, 0, 1920 * scaleX, 150).fill('#fce7f1');
+    doc.rect(-2, 0, 1920, 150).fill('#fce7f1');
     doc.rect(50, 0, 200, 1920).fill('#edeefc');
+
+
+    // Adı
+    const fontSize = 25;
+    const text = `${name.toUpperCase()} ${surname.toUpperCase()}`;
+    const textWidth = doc.font(RobotoBold).widthOfString(text, { size: fontSize });
+    const centerX = (doc.page.width - textWidth) / 2;
+
+    const verticalOffset = 50;
+
+    doc.fillColor('#3C3633').fontSize(fontSize).text(text, centerX + 60, verticalOffset, { align: 'left', });
+    doc.fillColor('#3C3633').font(RobotoItalic).fontSize(16).text(position, centerX + 60, verticalOffset + 60, { align: 'left', });
+
+
+    // Hakkımda
+    // İletişim Bilgileri
+    const contactInfoX =300;
+    const contactInfoY = 160;
+    doc.x = contactInfoX;
+    doc.y = contactInfoY;
+
+    doc.font(RobotoBold).fontSize(22).fillColor('#3C3633').text('Hakkımda'.toUpperCase(), { align: 'left' });
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, 270, verticalOffset + 150, { align: 'left', width: 330 });
+
+
 
     // Fotoğraf
     if (photoBuffer) {
