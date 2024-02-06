@@ -16,6 +16,8 @@ const {
 const {SitesController} = require("../controller/siteController.js")
 const {CommentsController} = require("../controller/commentController.js")
 const {SeoController} = require("../controller/seoController.js")
+const { body, validationResult } = require('express-validator');
+const ContactController = require("../controller/contactController.js")
 
 // Site
 router.get('/', SiteController.getIndexpage);
@@ -32,10 +34,18 @@ router.get("/price", SiteController.getPrice)
 router.get("/contact-form", SiteController.getContactForm)
 router.get('/login', SiteController.getLogin)
 router.get('/resume_service', SiteController.getResumService)
+router.get('/success', SiteController.getContactForm)
+
+// Contact Post
+router.post('/contacts', [
+    body('name').notEmpty().withMessage('First Name is required'),
+    body('surname').notEmpty().withMessage('Last Name is required'),
+    body('email').isEmail().withMessage('Invalid email address'),
+    body('message').notEmpty().withMessage('Message is required')
+], ContactController.sendEmail);
 
 
 // Blog
-
 router.get("/panel", authMiddleware,AdminController.getPanel)
 router.get("/panel/blogs", authMiddleware, AdminController.getBlog)
 router.get("/panel/blog/add", authMiddleware, AdminController.getAdminBlogEkle);

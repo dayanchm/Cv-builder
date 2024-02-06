@@ -63,9 +63,6 @@ app.use(
 app.use("/", adminMenu);
 app.use('/', pdfGent)
 
-app.use(function(req, res, next) {
-  res.status(404).render('404');
-});
 
 db.sequelize.sync({ force: false }).then(() => {
     app.listen(PORT);

@@ -70,6 +70,9 @@ class SiteController {
 
         }
     }
+    static getContactForm(req, res){
+        res.render("success")
+    }
     static getCreate(req, res) {
         res.render("create");
     }
