@@ -50,6 +50,12 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
             applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
         } else if (template === 'template4') {
             applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
+        } else if (template === 'template5') {
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
+        } else if (template === 'template6') {
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
+        } else if (template === 'template7') {
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
         }
         else {
             applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance);
@@ -271,7 +277,6 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     addSection('Referanslar', addReferencesSection);
 
 }
-
 function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
@@ -491,7 +496,6 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
 
 
 }
-
 function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
@@ -518,8 +522,7 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
 
 
     // Hakkımda
-    // İletişim Bilgileri
-    const contactInfoX =300;
+    const contactInfoX = 300;
     const contactInfoY = 160;
     doc.x = contactInfoX;
     doc.y = contactInfoY;
@@ -527,6 +530,35 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(RobotoBold).fontSize(22).fillColor('#3C3633').text('Hakkımda'.toUpperCase(), { align: 'left' });
     doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, 270, verticalOffset + 150, { align: 'left', width: 330 });
 
+
+    const contactInfosX = 70;
+    const contactInfosY = 270;
+    doc.x = contactInfosX;
+    doc.y = contactInfosY;
+
+    doc.font(RobotoBold).fontSize(22).fillColor('#3C3633').text('İletişim', { align: 'left' });
+    // E-posta
+    doc.moveDown(0.5);
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text('E-posta:', { align: 'left', bold: true });
+    doc.moveDown(0.5);
+    doc.font(RobotoBold).fontSize(10).fillColor('#3C3633').text(eposta, { align: 'left', width: 150 });
+    doc.moveDown(1);
+    // Telefon Numarası
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text('Telefon Numarasi:', { align: 'left', bold: true });
+    doc.moveDown(0.5);
+    doc.font(RobotoBold).fontSize(10).fillColor('#3C3633').text(phonenumber, { align: 'left', width: 100 });
+    doc.moveDown(1);
+    // Konum
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text('Konum:', { align: 'left', bold: true, });
+    doc.moveDown(0.5);
+    doc.font(RobotoBold).fontSize(10).fillColor('#3C3633').text(address, { align: 'left', width: 150 });
+    doc.font(Roboto);
+    // Website
+    doc.moveDown(1);
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text('Website:', { align: 'left', bold: true });
+    doc.moveDown(0.5);
+    doc.font(RobotoBold).fontSize(10).fillColor('#3C3633').text(site, { align: 'left' });
+    doc.font(Roboto);
 
 
     // Fotoğraf
@@ -542,28 +574,334 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
         doc.circle(circleX, circleY, circleRadius).clip().image(photoBuffer, imageX, imageY, { width: 160, height: 160 }).restore();
     }
 
-
-
 }
-
-function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
+function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
 
-    const scaleX = 0.7;
+    // Renkler
+    doc.rect(50, 50, 200, 1920).fill('#EEEEEE');
+    doc.rect(0, 770, 1920, 30).fill('#EEEEEE');
 
-    doc.rect(0, 0, 1920, 1000).fill('#fef9f9');
-    doc.rect(-2, 0, 1920 * scaleX, 150).fill('#fce7f1');
-    doc.rect(50, 0, 200, 1920).fill('#edeefc');
+    // Fotoğraf
+    if (photoBuffer) {
+        doc.image(photoBuffer, 50, 10, { width: 200, height: 200 });
+    }
+
+    // Ad-soyad
+
+    const fontSize = 24;
+    const uppercaseName = name.toUpperCase();
+    const uppercaseSurname = surname.toUpperCase();
+    const text = `${uppercaseName} ${uppercaseSurname}`;
+    const textWidth = doc.font(RobotoMedium).widthOfString(text, { size: fontSize });
+    const centerX = (doc.page.width - textWidth) / 2;
+
+    doc.rect(280, 135, 1920, 30).fill('#EEEEEE');
+    const verticalOffset = 50;
+    doc.fillColor('black').fontSize(fontSize).text(text, centerX + 75, verticalOffset, { align: 'left' });
+    doc.fillColor('black').font(Roboto).fontSize(20).text(position, centerX + 80, verticalOffset + 90, { align: 'left', width: 250 });
+
+    // İletişim Bilgiler
+    const contactInfoX = 75;
+    const contactInfoY = 250;
+    doc.x = contactInfoX;
+    doc.y = contactInfoY;
+
+    doc.font(Roboto).fontSize(20).fillColor('#000000').text('İLETİŞİM', { align: 'left' });
+
+    const lineY = contactInfoY + 25;
+    doc.lineWidth(1).moveTo(centerX, lineY).lineTo(contactInfoX, lineY).strokeColor('#000000').stroke();
+    // E-posta
+    doc.moveDown(0.5);
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(eposta, { align: 'left', width: 150 });
+    doc.moveDown(0.5);
+    // Telefon Numarası
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(phonenumber, { align: 'left', width: 100 });
+    // Website
+    doc.moveDown(0.5);
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(site, { align: 'left' });
+    doc.font(Roboto);
+
+    // Hakkında
+    const contactInfoXX = 75;
+    const contactInfoYY = 350;
+    doc.x = contactInfoXX;
+    doc.y = contactInfoYY;
+    doc.font(Roboto).fontSize(20).fillColor('#000000').text('HAKKINDA', { align: 'left' });
+    const linesY = contactInfoYY + 25;
+    doc.lineWidth(1).moveTo(centerX, linesY).lineTo(contactInfoXX, linesY).strokeColor('#000000').stroke();
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, contactInfoXX, contactInfoYY + 35, { align: 'left', width: 170 });
 
 
 
+    // Yetenekler
+
+    const contactInfoXXX = 75;
+    const contactInfoYYY = 490;
+    doc.x = contactInfoXXX;
+    doc.y = contactInfoYYY;
+    doc.moveDown(1);
+    doc.font(Roboto).fontSize(20).fillColor('000000').text('BECERİLER', contactInfoXXX, contactInfoYYY, { align: 'left' });
+    const lineYY = contactInfoYYY + 25;
+    doc.lineWidth(1).moveTo(centerX, lineYY).lineTo(contactInfoXXX, lineYY).strokeColor('#000000').stroke();
+    doc.moveDown(0.5);
+
+    const maxSkillsToShow = 5;
+
+    if (skilles && Array.isArray(skilles)) {
+        for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
+            const skill = skilles[index];
+            if (skill && typeof skill === 'object' && skill.skil) {
+                if (index !== 0) {
+                    doc.moveDown(0.5);
+                }
+                const skillText = `${skill.skil}`;
+                const skillLines = skillText.split(',').map(line => line.trim());
+
+                doc.font(RobotoLight)
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .lineGap(3)
+                    .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+            } else {
+                console.error(`Invalid skill at index ${index}.`);
+            }
+        }
+    } else {
+        console.error('Skills are not defined or not an array.');
+    }
+
+    doc.moveDown(2);
+    doc.font(Roboto).fontSize(20).fillColor('#000000').text('YABANCI DİL ', contactInfoXXX, contactInfoYYY + 110, { align: 'left' });
+    doc.lineWidth(1).moveTo(centerX, lineYY + 110).lineTo(contactInfoXXX, lineYY + 110).strokeColor('#000000').stroke();
+    doc.moveDown(0.5);
+
+    const maxLanguagesToShow = 5;
+    let displayedLanguages = 0;
+
+    if (langs && Array.isArray(langs)) {
+        langs.forEach((langg, index) => {
+            if (displayedLanguages < maxLanguagesToShow && langg && typeof langg === 'object' && langg.lang) {
+                if (displayedLanguages !== 0) {
+                    doc.moveDown(1);
+                }
+                const langText = `${langg.lang}`;
+                const langLines = langText.split(',').map(line => line.trim());
+                doc.font(RobotoLight)
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .lineGap(3)
+                    .text(`- ${langLines.join('\n- ')}`, { align: 'left' });
+
+                displayedLanguages++;
+            } else {
+                console.error(`Invalid lang at index ${index}.`);
+            }
+        });
+    } else {
+        console.error('Languages are not defined or not an array.');
+    }
 
 
 }
+function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
+    const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
+    const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
+    const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
+    const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
 
+}
+function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
+    const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
+    const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
+    const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
+    const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
+
+}
+function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
+    const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
+    const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
+    const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
+    const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
+
+    // Color
+    const gradient = doc.linearGradient(0, 0, 1920, 0);
+    gradient.stop(0, '#F18C31');
+    gradient.stop(1, '#F2A90F');
+
+    doc.rect(580, 0, 100, 1920).fill(gradient);
+
+
+    // Ad Soyad
+
+    const fontSize = 20;
+    const text = `${name} ${surname}`;
+    const textWidth = doc.font(RobotoBold).widthOfString(text, { size: fontSize });
+    const centerX = (doc.page.width - textWidth) / 2;
+    const verticalOffset = 50;
+    doc.fillColor('black').fontSize(fontSize).text(text, centerX - 180, verticalOffset, { align: 'left' });
+    doc.fillColor('black').font(Roboto).fontSize(16).text(position, centerX - 180, verticalOffset + 35, { align: 'left', });
+
+
+    // Fotoğraf
+    doc.image(photoBuffer, 350, 50, { width: 200, height: 200 }); // Resmi ekleyin
+
+
+    // İletişim Bilgiler
+
+    const contactInfoX = 50;
+    const contactInfoY = 250;
+    doc.x = contactInfoX;
+    doc.y = contactInfoY;
+    const boxWidth = 230;
+    const boxHeight = 530;
+    const cornerRadius = 20;
+    const borderWidth = 0.8;
+    
+    doc.roundedRect(contactInfoX -20, contactInfoY-30, boxWidth, boxHeight, cornerRadius)
+        .lineWidth(borderWidth) // Kenarlık kalınlığını ayarlayın
+        .strokeColor('#000000') // Kenarlık rengini ayarlayın
+        .stroke(); // Kenarlık çiz
+
+    doc.font(RobotoBold).fontSize(16).fillColor('#000000').text('İLETİŞİM', { align: 'left' });
+    // E-posta
+    doc.moveDown(0.5);
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(eposta, { align: 'left', width: 150 });
+    doc.moveDown(0.5);
+    // Telefon Numarası
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(phonenumber, { align: 'left', width: 100 });
+    // Website
+    doc.moveDown(0.5);
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(site, { align: 'left' });
+    doc.font(Roboto);
+
+    // Hakkında
+    const contactInfoXX = 50;
+    const contactInfoYY = 340;
+    doc.x = contactInfoXX;
+    doc.y = contactInfoYY;
+    doc.font(RobotoBold).fontSize(16).fillColor('#000000').text('HAKKINDA', { align: 'left' });
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, contactInfoXX, contactInfoYY + 25, { align: 'left', width: 170 });
+
+    // Yetenekler
+    const contactInfoXXX = 50;
+    const contactInfoYYY = 460;
+    doc.x = contactInfoXXX;
+    doc.y = contactInfoYYY;
+
+    const contactRefX = 35;
+    const contactRefY = 230;
+    doc.x = contactRefX;
+    doc.y = contactRefY;
+
+    const addSection = (title, content) => {
+        const startX = 50;
+        const startY = (doc.y !== undefined && doc.y !== null) ? doc.y : 30;
+
+        doc.font(RobotoMedium).fontSize(14).fillColor('black').text(title, startX, startY, { align: 'left' });
+        doc.moveDown(1);
+        content();
+        const endY = doc.y + 15;
+        doc.y = Math.max(startY, endY);
+    };
+
+
+    const addReferencesSection = () => {
+        const transformRefenerce = (referance) => {
+            return referance.map((referance) => {
+                return {
+                    jobTitle: Array.isArray(referance.jobTitle) ? referance.jobTitle : [referance.jobTitle],
+                    city: Array.isArray(referance.city) ? referance.city : [referance.city],
+                    employer: Array.isArray(referance.employer) ? referance.employer : [referance.employer],
+                };
+            });
+        };
+
+        const transformedRefenerce = transformRefenerce(referance || []);
+        transformedRefenerce.forEach((referance, index) => {
+            if (referance && typeof referance === 'object') {
+                if (index !== 0) {
+                    doc.moveDown(1);
+                }
+                referance.jobTitle.forEach(title => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(` ${title}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.employer.forEach(emp => {
+                    doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${emp}`, { align: 'left' });
+                });
+                doc.moveDown(0.5)
+                referance.city.forEach(cty => {
+                    doc.font(Roboto).fontSize(10).fillColor('black').text(`${cty}`, { align: 'left' });
+                });
+            } else {
+                console.error(`Invalid experience at index ${index}.`);
+            }
+        });
+    };
+
+    addSection('REFERANSLAR', addReferencesSection);
+
+
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(16).fillColor('000000').text('BECERİLER', contactInfoXXX + 250, contactInfoYYY, { align: 'left' });
+    doc.moveDown(0.5);
+
+    const maxSkillsToShow = 5;
+    if (skilles && Array.isArray(skilles)) {
+        for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
+            const skill = skilles[index];
+            if (skill && typeof skill === 'object' && skill.skil) {
+                if (index !== 0) {
+                    doc.moveDown(0.5);
+                }
+                const skillText = `${skill.skil}`;
+                const skillLines = skillText.split(',').map(line => line.trim());
+
+                doc.font(RobotoLight)
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .lineGap(3)
+                    .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+            } else {
+                console.error(`Invalid skill at index ${index}.`);
+            }
+        }
+    } else {
+        console.error('Skills are not defined or not an array.');
+    }
+
+    doc.moveDown(2);
+    doc.font(RobotoBold).fontSize(16).fillColor('#000000').text('YABANCI DİL ', contactInfoXXX, contactInfoYYY + 110, { align: 'left' });
+    const maxLanguagesToShow = 5;
+    let displayedLanguages = 0;
+
+    if (langs && Array.isArray(langs)) {
+        langs.forEach((langg, index) => {
+            if (displayedLanguages < maxLanguagesToShow && langg && typeof langg === 'object' && langg.lang) {
+                if (displayedLanguages !== 0) {
+                    doc.moveDown(1);
+                }
+                const langText = `${langg.lang}`;
+                const langLines = langText.split(',').map(line => line.trim());
+                doc.font(RobotoLight)
+                    .fontSize(10)
+                    .fillColor('#000000')
+                    .lineGap(3)
+                    .text(`- ${langLines.join('\n- ')}`, { align: 'left' });
+
+                displayedLanguages++;
+            } else {
+                console.error(`Invalid lang at index ${index}.`);
+            }
+        });
+    } else {
+        console.error('Languages are not defined or not an array.');
+    }
+}
 function applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance) {
     doc.rect(0, 0, doc.page.width, doc.page.height).fill('lightgray');
     doc.fontSize(20).text('Default Template - Curriculum Vitae', { align: 'center', fillColor: 'blue' });
