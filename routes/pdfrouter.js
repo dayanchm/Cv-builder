@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const PDFDocument = require('pdfkit');
 const path = require('path');
+const jimp = require('jimp'); 
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -776,13 +777,95 @@ function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoB
         doc.circle(circleX, circleY, circleRadius).lineWidth(10).fillOpacity(0).strokeColor('#ffffff').stroke();
     }
 
-
 }
 function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
+    const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
+    const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
+
+    // Adı
+    const fontSize = 20;
+    const text = `${name.toUpperCase()} ${surname.toUpperCase()}`;
+    const pos = `${position.toUpperCase()}`
+    const textWidth = doc.font(RobotoBold).widthOfString(text, { size: fontSize });
+    const centerX = (doc.page.width - textWidth) / 2;
+
+    const verticalOffset = 50;
+
+    doc.fillColor('#000000').fontSize(fontSize).text(text, centerX - 20, verticalOffset, { align: 'left', });
+    doc.fillColor('#000000').font(RobotoMedium).fontSize(14).text(pos, centerX - 20, verticalOffset + 40, { align: 'left', });
+
+
+    // Çizgiler
+    const contactInfossX = 40;
+    const contactInfossX2 = 240;
+    const contactInfossX3 = 260;
+    const contactInfossY = 150;
+    const lineYY = contactInfossY + 20;
+    doc.x = contactInfossX;
+    doc.y = contactInfossY;
+    // Üst Çizgi
+    doc.lineWidth(1).moveTo(contactInfossX, lineYY).lineTo(contactInfossX + 530, lineYY).strokeColor('#C7C8CC').stroke();
+
+    // Ortadaki Çizgi
+    doc.x = contactInfossX2;
+    doc.lineWidth(1).moveTo(contactInfossX2, lineYY).lineTo(contactInfossX2, lineYY+ 600).strokeColor('#C7C8CC').stroke();
+
+    // Hakkımızdaki Çizgi
+    doc.x = contactInfossX3;
+    doc.lineWidth(0.5).moveTo(contactInfossX3, lineYY+150).lineTo(contactInfossX3 + 300, lineYY+150).strokeColor('#C7C8CC').stroke();
+    // İş Geçmişi
+    doc.lineWidth(0.5).moveTo(contactInfossX3, lineYY+400).lineTo(contactInfossX3 + 300, lineYY+400).strokeColor('#C7C8CC').stroke();
+
+    // Hakkımda
+    const contactInfoX = 270;
+    const contactInfoY = 200;
+    doc.x = contactInfoX;
+    doc.y = contactInfoY;
+
+    doc.font(RobotoBold).fontSize(16).fillColor('#000000').text('Hakkımda'.toUpperCase(), { align: 'left' });
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, 270, verticalOffset + 180, { align: 'left', width: 300 });
+
+
+    const contactInfosX = 40;
+    const contactInfosY = 220;
+    const lineY = contactInfosY + 20; // Metnin altına çizgi çekmek için bir y koordinatı belirleyin
+
+    doc.x = contactInfosX;
+    doc.y = contactInfosY;
+
+    doc.font(RobotoBold).fontSize(11).fillColor('#000000').text('İLETİŞİM', { align: 'left' });
+    doc.lineWidth(0.4).moveTo(contactInfosX, lineY+100).lineTo(contactInfosX + 180, lineY+100).strokeColor('#C7C8CC').stroke();
+    doc.lineWidth(0.4).moveTo(contactInfosX, lineY+250).lineTo(contactInfosX + 180, lineY+250).strokeColor('#C7C8CC').stroke();
+    doc.lineWidth(0.4).moveTo(contactInfosX, lineY+390).lineTo(contactInfosX + 180, lineY+390).strokeColor('#C7C8CC').stroke();
+    // E-posta
+    doc.moveDown(1);
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(eposta, { align: 'left', width: 150 });
+    doc.moveDown(0.7);
+    // Telefon Numarası
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(phonenumber, { align: 'left', width: 100 });
+    doc.moveDown(0.7);
+    // Konum
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(address, { align: 'left', width: 150 });
+    // Website
+    doc.moveDown(0.7);
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(site, { align: 'left' });
+
+
+    // Fotoğraf
+    if (photoBuffer) {
+        const circleX = 157 - 50;
+        const circleY = 115 - 20;
+        const circleRadius = 50;
+
+        const imageX = circleX - circleRadius;
+        const imageY = circleY - circleRadius;
+
+        doc.circle(circleX, circleY, circleRadius).clip().image(photoBuffer, imageX, imageY, { width: 110, height: 110 });
+    }
 
 }
 function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance) {
