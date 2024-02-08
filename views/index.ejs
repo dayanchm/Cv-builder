@@ -25,8 +25,17 @@
     </section>
 
     <%- include('./components/card'); -%>
-
+    <div class="owl-carousel">
+      <% resumeList.forEach(blog=> { %>
+      <div>
+        <a href="/resume/<%=blog.img %>" data-glightbox="title:<%=blog.title %>" data-gallery="post">
+        <img src="/resume/<%=blog.img %>" alt="<%=blog.title %>" class="p-5">
+      </a>
+      </div>
+      <% }); %>
+    </div>
     <%- include('./components/comments'); -%>
+    
 
     <%- include('./components/explore'); -%>
     <div class="row pt-4 mobile_resume">
