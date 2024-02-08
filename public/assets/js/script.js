@@ -116,23 +116,21 @@ function addDefaultWorkExperience(container, index) {
     // Create a default entry
     var defaultEntry = document.createElement('div');
     defaultEntry.classList.add('work-experience');
-    defaultEntry.id = 'experiences_' + index;
+    defaultEntry.id = 'experiences_' + index + '_' + Math.random().toString(36).substr(2, 9);
 
     var inputNames = ['jobTitle', 'city', 'employer', 'startDate', 'endDate'];
 
     inputNames.forEach(function (name) {
         var input = document.createElement('input');
         input.type = 'text';
-        input.name = 'experiences_' + index + '_' + name;
+        input.name = 'experiences[' + index + '][' + name + ']';
         input.placeholder = name.charAt(0).toUpperCase() + name.slice(1) + ' Örn.';
-
         defaultEntry.appendChild(input);
     });
 
     var textarea = document.createElement('textarea');
-    textarea.name = 'experiences_' + index + '_description';
+    textarea.name = 'experiences[' + index + '][description]';
     textarea.placeholder = 'Açıklama';
-
     defaultEntry.appendChild(textarea);
 
     // Add Remove button
@@ -290,7 +288,6 @@ function updateCharacterCount(textarea) {
     }
 }
 
-
 // Referance
 
 function toggleReferanceExperience() {
@@ -318,20 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function addDefaultReferanceExperience(container, index) {
     var defaultEntry = document.createElement('div');
     defaultEntry.classList.add('work-experience');
-    defaultEntry.id = 'referance_' + index;
+    defaultEntry.id = 'referance_' + index + '_' + Math.random().toString(36).substr(2, 9); // Burada ID oluşturuluyor
 
-    var inputNames = ['jobTitle', 'city', 'employer', ];
+    var inputNames = ['jobTitle', 'city', 'employer'];
 
     inputNames.forEach(function (name) {
         var input = document.createElement('input');
         input.type = 'text';
-        input.name = 'referance_' + index + '_' + name;
-
+        input.name = 'referance[' + index + '][' + name + ']'; // Doğru şekilde name özelliği atanıyor
         defaultEntry.appendChild(input);
     });
-
-    var textarea = document.createElement('textarea');
-    textarea.name = 'referance_' + index + '_description';
 
     var removeBtn = document.createElement('button');
     removeBtn.innerText = 'Sil';
@@ -346,9 +339,78 @@ function addReferanceExperience() {
     var container = document.getElementById('referanceExperienceContainer');
     var newIndex = container.children.length; // Get the current count of child elements
     addDefaultReferanceExperience(container, newIndex);
-    console.log('Added work experience entry:', index);
+    console.log('Added referance experience entry:', newIndex);
 }
+
 function removeReferanceExperience(button) {
+    var entry = button.parentNode;
+    var container = entry.parentNode;
+    container.removeChild(entry);
+}
+
+
+// Academic
+
+function toggleAcademiExperience() {
+    var container = document.getElementById('academiExperienceContainer');
+    var icon = document.getElementById('academiIcon');
+
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        icon.innerText = '-';
+    } else {
+        container.style.display = 'none';
+        icon.innerText = '+';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('academiExperienceContainer');
+
+    if (container.childElementCount === 0) {
+        addDefaultWorkExperience(container);
+    }
+
+    container.style.display = 'none';
+});
+
+function addDefaultAcademiExperience(container, index) {
+    var defaultEntry = document.createElement('div');
+    defaultEntry.classList.add('academi-experience');
+    defaultEntry.id = 'academi_' + index + '_' + Math.random().toString(36).substr(2, 9);
+
+    var inputNames = ['jobTitle', 'city', 'employer', 'startDate', 'endDate'];
+
+    inputNames.forEach(function (name) {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'experiences[' + index + '][' + name + ']';
+        input.placeholder = name.charAt(0).toUpperCase() + name.slice(1) + ' Örn.';
+        defaultEntry.appendChild(input);
+    });
+
+    var textarea = document.createElement('textarea');
+    textarea.name = 'experiences[' + index + '][description]';
+    textarea.placeholder = 'Açıklama';
+    defaultEntry.appendChild(textarea);
+
+    // Add Remove button
+    var removeBtn = document.createElement('button');
+    removeBtn.innerText = 'Sil';
+    removeBtn.setAttribute('onclick', 'removeAcademiExperience(this)');
+    removeBtn.classList.add('remove-btn');
+    defaultEntry.appendChild(removeBtn);
+
+    // Append the default entry to the container
+    container.appendChild(defaultEntry);
+}
+
+function addAcademiExperience() {
+    var container = document.getElementById('academiExperienceContainer');
+    var newIndex = container.children.length;
+    addDefaultAcademiExperience(container, newIndex);
+}
+function removeAcademiExperience(button) {
     var entry = button.parentNode;
     var container = entry.parentNode;
     container.removeChild(entry);
