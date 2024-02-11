@@ -10,6 +10,30 @@ function selectPdf(element) {
 }
 
 
+var currentStep = 0;
+showStep(currentStep);
+
+function showStep(n) {
+    var steps = document.getElementsByClassName("step");
+    var totalSteps = steps.length;
+    for (var i = 0; i < totalSteps; i++) {
+        steps[i].style.display = "none";
+    }
+    steps[n].style.display = "block";
+    updateProgressBar(n);
+}
+
+function updateProgressBar(n) {
+    var progressSteps = document.querySelectorAll('.progress-bar li');
+    for (var i = 0; i < progressSteps.length; i++) {
+        progressSteps[i].classList.remove('active', 'completed');
+        if (i < n) {
+            progressSteps[i].classList.add('completed');
+        }
+    }
+    progressSteps[n].classList.add('active');
+}
+
 function logFormData() {
     var currentStepInputs = document.querySelector('.step.active').getElementsByTagName('input');
     var currentStepSelects = document.querySelector('.step.active').getElementsByTagName('select');
@@ -33,40 +57,36 @@ function logFormData() {
 }
 
 function nextStep() {
-    logFormData();
-    var totalSteps = document.getElementsByClassName("step").length;
-    if (currentStep < totalSteps - 1) {
-        currentStep++;
-        showStep(currentStep);
+    var inputs = document.querySelectorAll('.step.active input[required], .step.active select[required], .step.active textarea[required]');
+
+    var missingFields = [];
+    inputs.forEach(function(input) {
+        if (!input.value.trim()) {
+            missingFields.push(input.getAttribute('placeholder'));
+            input.classList.add('error'); 
+        } else {
+            input.classList.remove('error'); 
+        }
+    });
+
+    var missingFieldsContainer = document.getElementById('missingFieldsContainer');
+    missingFieldsContainer.innerHTML = ''; // Önceki eksik alanları temizle
+
+    if (missingFields.length > 0) {
+        var missingFieldsMessage = "Lütfen şu alanları doldurun: <br>";
+        missingFields.forEach(function(field) {
+            missingFieldsMessage += "- " + field + "<br>";
+        });
+        missingFieldsContainer.innerHTML = missingFieldsMessage;
+    } else {
+        var totalSteps = document.getElementsByClassName("step").length;
+        if (currentStep < totalSteps - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
     }
 }
 
-async function nextStepWithLoading() {
-        nextStep();
-        Swal.fire('Hata!', error.toString(), 'error');
-}
-
-
-var currentStep = 0;
-showStep(currentStep);
-
-function showStep(n) {
-    var steps = document.getElementsByClassName("step");
-    var totalSteps = steps.length;
-    for (var i = 0; i < totalSteps; i++) {
-        steps[i].style.display = "none";
-    }
-    steps[n].style.display = "block";
-    updateProgressBar(n);
-}
-
-function nextStep() {
-    var totalSteps = document.getElementsByClassName("step").length;
-    if (currentStep < totalSteps - 1) {
-        currentStep++;
-        showStep(currentStep);
-    }
-}
 
 function prevStep() {
     if (currentStep > 0) {
@@ -75,15 +95,9 @@ function prevStep() {
     }
 }
 
-function updateProgressBar(n) {
-    var progressSteps = document.querySelectorAll('.progress-bar li');
-    for (var i = 0; i < progressSteps.length; i++) {
-        progressSteps[i].classList.remove('active', 'completed');
-        if (i < n) {
-            progressSteps[i].classList.add('completed');
-        }
-    }
-    progressSteps[n].classList.add('active');
+function nextStepWithLoading() {
+    nextStep();
+    Swal.fire('İşlem Tamamlandı', 'Bir sonraki adıma geçebilirsiniz.', 'success');
 }
 
 // İş Deneyimi 

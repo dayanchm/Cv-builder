@@ -25,7 +25,7 @@
 .pdf-item p {
     margin: 10px 0;
 }
-form {
+.form_bg {
     width: 100%;
     max-width: 1600px;
     margin: 20px auto;
@@ -208,6 +208,9 @@ button:hover {
 .mobile_resume2{
     margin: 0 20% 0 20%;
 }
+.mobile_resume3{
+    margin: 0 10% 0 10%;  
+}
 .mobile_blog {
     margin: 0 10% 0 10%;
 }
@@ -301,6 +304,10 @@ input,textarea{
     padding: 15px;
     color:#ffffff;
     border-radius: 10px;
+}
+.btn_ads{
+    z-index: 99;
+    position: relative;
 }
 .btn_dark:hover{
     background-color: #333;
