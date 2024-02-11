@@ -15,6 +15,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const GlobalDataMiddleware = require("./middleware/varMiddleware.js")
 const methodOverride = require('method-override');
+const authenticateUser = require('./middleware/authenticate');
 
 const PORT = process.env.PORT || 3005;
 
@@ -54,14 +55,19 @@ app.use(session({
 app.use(flash());
 app.use(methodOverride('_method'));
 
+
 app.use(
   GlobalDataMiddleware.setBlogFooterList, 
   GlobalDataMiddleware.setSiteList,
   GlobalDataMiddleware.setCommentList,
   GlobalDataMiddleware.setCirriculumList,
   );
+app.use(authenticateUser);
+
 app.use("/", adminMenu);
 app.use('/', pdfGent)
+
+
 
 
 db.sequelize.sync({ force: false }).then(() => {

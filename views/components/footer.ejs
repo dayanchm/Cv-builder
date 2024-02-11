@@ -1,48 +1,73 @@
+<section class="wrapper gradient-8 bg-lines">
+  <div class="container pt-17 pt-md-19 pb-12 text-center">
+    <div class="row">
+      <div class="col-lg-10 col-xl-9 col-xxl-8 mx-auto" data-cues="zoomIn" data-group="page-title" data-interval="-200" data-delay="500">
+        <div class="pt-12">
+          <a href="/create-cv" class="btn_dark">Özgeçmişinizi Oluşturun</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <footer class="wrapper bg-dark text-inverse">
-  <div class="container py-13 py-md-15">
+  <div class="container py-12 py-md-16 px-16">
     <div class="row gy-6 gy-lg-0">
-      <div class="col-md-4 col-lg-3">
+      <div class="col-md-3 col-lg-3">
         <div class="widget">
-          <h3 class="text-white" style="font-size: 30px;">Mobil CV</h3>
-          <p class="mb-4">© 2024 <a href="https://www.srndijital.com/" target="_blank">SRN Dijital</a> <br
-              class="d-none d-lg-block">All rights reserved.</p>
-        </div>
-      </div>
-      <div class="col-md-4 col-lg-3">
-        <div class="widget">
-          <h4 class="widget-title text-white mb-3">İletişim Bilgilerimiz</h4>
-          <address class="pe-xl-15 pe-xxl-17"><%= setSiteList[0].addres %></address>
-          <a href="cdn-cgi/l/email-protection.html#6340"><span class="__cf_email__"
-              data-cfemail="4d24232b220d28202c2421632e2220"><%= setSiteList[0].email %></span></a><br> <%= setSiteList[0].number %>
-        </div>
-        <!-- /.widget -->
-      </div>
-      <!-- /column -->
-      <div class="col-md-4 col-lg-3">
-        <div class="widget">
-          <h4 class="widget-title text-white mb-3">Kurumsal</h4>
+          <h4 class="widget-title text-white mb-3">Hizmet</h4>
           <ul class="list-unstyled  mb-0">
-            <li><a href="/about">Hakkımızda</a></li>
-            <li><a href="/price">Fiyatlandırma</a></li>
-            <li><a href="/cookie">Şartlar ve koşullar</a></li>
-            <li><a href="/contact">İletişim</a></li>
+            <li><a href="/create-cv">Özgeçmiş Oluştur</a></li>
+            <li><a href="/price">Özgeçmiş Yazma Hizmeti </a></li>
+            <li><a href="/resume_service">Optimizasyon Hizmetini Sürdür</a></li>
           </ul>
         </div>
-        <!-- /.widget -->
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">Destek</h4>
+          <ul class="list-unstyled  mb-0">
+          <li><a href="/about">Hakkımızda</a></li>
+          <li><a href="/contact">İletişim</a></li>
+          <li><a href="/sss">SSS</a></li>
+        </ul>
+        </div>
+      </div>
+      <div class="col-md-3 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">Mobil CV</h4>
+          <ul class="list-unstyled  mb-0">
+            <li><a href="/secret">Gizlilik ve Çerez Beyanı</a></li>
+            <li><a href="/price">Fiyatlandırma</a></li>
+            <li><a href="/cookie">Şartlar ve koşullar</a></li>
+          </ul>
+        </div>
       </div>
       <!-- /column -->
-      <div class="col-md-12 col-lg-3">
+      <div class="col-md-3 col-lg-3">
         <div class="widget">
           <h4 class="widget-title text-white mb-3">Blog</h4>
           <% if (blogFooterList && blogFooterList.length > 0) { %>
             <div class="widget">
               <% const lastThreeBlogs = blogFooterList.slice(-3); %>
               <% lastThreeBlogs.forEach(blog => { %>
-                <p class="mb-5"><a href="/blog/<%= blog.slug %>"><%= blog.title %></a></p>
+                <% const maxLength = 20; // Başlık maksimum karakter sınırı %>
+                <% const truncatedTitle = blog.title.length > maxLength ? blog.title.substring(0, maxLength) + '...' : blog.title; %>
+                <p class="mb-2"><a href="/blog/<%= blog.slug %>"><%= truncatedTitle %></a></p>
               <% }) %>
             </div>
           <% } %>
+          
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="pt-16">
+        <div class="page-footer__inner">
+          <div style="float:left;">
+          2024 © Mobilcv.com | <a href="/cookie" title="Şartlar ve Koşullar">Şartlar ve Koşullar</a> | 
+          <a href="/secret" title="Gizlilik ve Çerez Politikası">Gizlilik ve Çerez Politikası</a>
+        </div>
+      </div>
       </div>
     </div>
   </div>

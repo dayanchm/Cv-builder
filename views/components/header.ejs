@@ -29,9 +29,19 @@
             <li class="nav-item">
               <a class="nav-link" href="/price">Fiyatlandırma</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/login">Giriş Yap</a>
-            </li>
+            <% if (user && user.username) { %>
+              <li class="nav-item">
+                  <span class="nav-link">Hoş Geldiniz, <%= user.username %></span>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Çıkış Yap</a>
+              </li>
+          <% } else { %>
+              <li class="nav-item">
+                  <a class="nav-link" href="/register">Hesap Oluştur</a>
+              </li>
+          <% } %>
+          
           </ul>
 
           <div class="offcanvas-footer d-lg-none">

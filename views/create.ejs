@@ -165,7 +165,7 @@
                                     <h2 class="ha__title">Son Adım</h2>
 
                                     <label for="template">Template Seç</label>
-                                    <select name="template" id="template">
+                                    <select name="template" id="template" >
                                         <option value="template1">Template 1</option>
                                         <option value="template2">Template 2</option>
                                         <option value="template3">Template 3</option>
@@ -185,7 +185,6 @@
                                                 Geri</button>
                                         </div>
                                     </div>
-                                    <iframe id="pdfViewer"></iframe>
                                 </div>
                             </form>
                         </div>
@@ -194,39 +193,6 @@
             </div>
         </section>
     </div>
-
-    <script>
-        const form = document.getElementById('multiStepForm');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            try {
-                // Her bir template için PDF oluşturma endpoint'ine POST isteği yap
-                for (let i = 1; i <= 7; i++) {
-                    // Template seçeneğini ayarla
-                    formData.set('template', `template${i}`);
-
-                    // PDF oluşturma endpoint'ine POST isteği yap
-                    const response = await fetch('/create-cv-pdf', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    // Sunucudan dönen PDF dosyasını al
-                    const blob = await response.blob();
-
-                    // PDF dosyasını göstermek için iframe oluştur
-                    const iframe = document.getElementById('pdfViewer');
-                    iframe.src = URL.createObjectURL(blob);
-                }
-            } catch (error) {
-                console.error('PDF oluşturma hatası:', error);
-                // Hata durumunda kullanıcıya bilgi verilebilir
-            }
-        });
-    </script>
 <%- include('./components/footer'); -%>
 
 

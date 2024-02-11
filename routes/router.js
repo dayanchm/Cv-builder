@@ -3,6 +3,8 @@ const router = express.Router();
 const {loginAuthMiddleware, authMiddleware} = require("../middleware/userMiddleware.js")
 const {SitemapController} =require ('../controller/sitemapController.js');
 const {Blogs} = require ("../controller/blogController.js")
+const authenticateUser  = require("../middleware/authenticate.js"); // Middleware dosyasının yolunu doğru şekilde belirtmelisiniz
+
 const {
     SiteController,
     AdminController,
@@ -18,6 +20,11 @@ const {CommentsController} = require("../controller/commentController.js")
 const {SeoController} = require("../controller/seoController.js")
 const { body, validationResult } = require('express-validator');
 const ContactController = require("../controller/contactController.js")
+
+const {UserController} = require("../controller/UserController.js")
+
+router.use(authenticateUser);
+
 
 // Site
 router.get('/', SiteController.getIndexpage);
@@ -35,6 +42,15 @@ router.get("/contact-form", SiteController.getContactForm)
 router.get('/login', SiteController.getLogin)
 router.get('/resume_service', SiteController.getResumService)
 router.get('/success', SiteController.getContactForm)
+
+
+// User
+router.get('/register', UserController.GetRegister)
+router.post('/register', UserController.RegisterUser);
+router.post('/login', UserController.LoginUser);
+router.get('/logout', UserController.LogoutUser)
+
+
 
 // Contact Post
 router.post('/contacts', [

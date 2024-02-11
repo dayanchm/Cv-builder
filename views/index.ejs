@@ -23,8 +23,6 @@
         </div>
       </div>
     </section>
-
-    <%- include('./components/card'); -%>
     <div class="owl-carousel">
       <% resumeList.forEach(blog=> { %>
       <div>
@@ -33,10 +31,9 @@
       </a>
       </div>
       <% }); %>
-    </div>
-    <%- include('./components/comments'); -%>
-    
-
+    </div>   
+    <%- include('./components/card'); -%>
+ 
     <%- include('./components/explore'); -%>
     <div class="row pt-4 mobile_resume">
       <div class="my-5">
@@ -63,6 +60,9 @@
     </div>
     <%- include('./components/resume'); -%>
     <%- include('./components/apply'); -%>
+
+    <%- include('./components/comments'); -%>
+
   </div>
   <%- include('./components/footer'); -%>
   <%- include('./components/script'); -%>
