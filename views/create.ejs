@@ -34,9 +34,8 @@
                         data-interval="200" data-delay="100">
                         <div class="d-flex justify-content-center mb-4" data-cues="zoomOut"
                             data-group="page-title-buttons" data-delay="100">
-                            <form id="multiStepForm cvForm" method="post" action="/create-cv-pdf"
-                                enctype="multipart/form-data">
-                                <div class="form_bg">
+                            <form id="multiStepForm cvForm " method="post" action="/create-cv-pdf"
+                                enctype="multipart/form-data" class="form_bg">
                                     <ul class="progress-bar">
                                         <li class="active icon1 pb-6">Kişisel Bilgiler</li>
                                         <li class="icon2 pb-6">İş Bilgiler</li>
@@ -179,7 +178,7 @@
                                         </select>
                                         <div class="d-flex flex-column justify-content-center ">
                                             <div>
-                                                <button type="submit">Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
+                                                <button type="submit" onclick="showGeneratedCV()">Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
                                             </div>
                                             
                                             <div class="forward__left">
@@ -187,11 +186,13 @@
                                                     <i class="fa-solid fa-angle-left"></i>
                                                     Geri</button>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                               <%- include('./components/extracom'); -%>
 
+                                            <div id="pdfViewer" style="display: none;">
+                                                <!-- PDF dosyasını göstermek için embed veya iframe elementi -->
+                                            </div>
+                                        </div>
+                                </div>
+                                
 
                             </form>
                         </div>
@@ -200,8 +201,26 @@
             </div>
         </section>
     </div>
-<%- include('./components/footer'); -%>
 
+ 
+<%- include('./components/footer'); -%>
+<script>
+    function showGeneratedCV() {
+var selectedTemplate = document.getElementById('template').value;
+
+// PDF dosyasının URL'sini belirleyin
+var pdfUrl = '/create-cv-pdf?template=' + selectedTemplate;
+
+// PDF dosyasını gösteren elementi seçin
+var pdfViewer = document.getElementById('pdfViewer');
+
+// PDF dosyasını gösteren elementin içeriğini ayarlayın
+pdfViewer.innerHTML = '<embed src="' + pdfUrl + '" width="100%" height="500px" type="application/pdf">';
+
+// PDF gösterici elementini görünür yapın
+pdfViewer.style.display = 'block';
+}
+</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <%- include('./components/script'); -%>

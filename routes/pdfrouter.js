@@ -3,12 +3,24 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const PDFDocument = require('pdfkit');
 const path = require('path');
-const jimp = require('jimp');
+const fs = require('fs');
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 
+// Geçici dosya yolu için bir klasör oluştur
+const tempDir = path.join(__dirname, 'temp');
+if (!fs.existsSync(tempDir)){
+    fs.mkdirSync(tempDir);
+}
 
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, tempDir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
 const upload = multer({ storage: storage });
 
 router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
@@ -66,11 +78,21 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
         }
 
         doc.end();
+
+        fs.unlink(path.join(tempDir, fileName), (err) => {
+            if (err) {
+                console.error("Dosya silinirken bir hata oluştu:", err);
+            } else {
+                console.log("Geçici dosya başarıyla silindi.");
+            }
+        });
+        
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
