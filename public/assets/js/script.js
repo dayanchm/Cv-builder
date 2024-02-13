@@ -70,7 +70,7 @@ function nextStep() {
     });
 
     var missingFieldsContainer = document.getElementById('missingFieldsContainer');
-    missingFieldsContainer.innerHTML = ''; // Önceki eksik alanları temizle
+    missingFieldsContainer.innerHTML = ''; 
 
     if (missingFields.length > 0) {
         var missingFieldsMessage = "Lütfen şu alanları doldurun: <br>";
@@ -97,7 +97,6 @@ function prevStep() {
 
 function nextStepWithLoading() {
     nextStep();
-    Swal.fire('İşlem Tamamlandı', 'Bir sonraki adıma geçebilirsiniz.', 'success');
 }
 
 // İş Deneyimi 
@@ -118,7 +117,6 @@ function toggleWorkExperience() {
 document.addEventListener('DOMContentLoaded', function() {
     var container = document.getElementById('workExperienceContainer');
 
-    // Check if the container has no child elements, then add a default entry
     if (container.childElementCount === 0) {
         addDefaultWorkExperience(container);
     }
@@ -127,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addDefaultWorkExperience(container, index) {
-    // Create a default entry
     var defaultEntry = document.createElement('div');
     defaultEntry.classList.add('work-experience');
     defaultEntry.id = 'experiences_' + index + '_' + Math.random().toString(36).substr(2, 9);
@@ -158,10 +155,16 @@ function addDefaultWorkExperience(container, index) {
     container.appendChild(defaultEntry);
 }
 
+
 function addWorkExperience() {
     var container = document.getElementById('workExperienceContainer');
     var newIndex = container.children.length; // Get the current count of child elements
     addDefaultWorkExperience(container, newIndex);
+
+    // Yeni eklenen iş deneyimi girişini en altta göstermek için
+    var newEntry = container.querySelector('.work-experience:last-child');
+    container.appendChild(newEntry);
+
     console.log('Added work experience entry:', newIndex);
 }
 function removeWorkExperience(button) {

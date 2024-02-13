@@ -24,51 +24,6 @@
         .hidden {
             display: none;
         }
-        .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    position: relative;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-#modal-image {
-    max-width: 100%;
-    max-height: 300px;
-}
-
-#crop-button {
-    display: block;
-    margin-top: 10px;
-}
     </style>
 
     <body>
@@ -98,16 +53,6 @@
                                                             class="hidden-input" required>
                                                         <label for="photo" class="foto_label">Fotoğraf Yükle
                                                             (200x200)</label>
-                                                    </div>
-                                                    
-                                                    <div id="cropModal" class="modal">
-                                                        <div class="modal-content">
-                                                            <span class="close">&times;</span>
-                                                            <div id="modal-image-container">
-                                                                <img id="modal-image" src="#" alt="Önizleme">
-                                                            </div>
-                                                            <button id="crop-button">Kes</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-9 col-sm-12">
@@ -155,32 +100,41 @@
                                             </div>
                                             <!-- İş Deneyimi -->
                                             <div class="section">
-                                                <h3 onclick="toggleWorkExperience()">İş Deneyimi <span
+                                                <h3 onclick="toggleWorkExperience()"><i
+                                                        class="fa-solid fa-briefcase pr-3"></i> İş Deneyimi <span
                                                         id="toggleIcon">+</span></h3>
                                                 <div id="workExperienceContainer" class="work-experience-entry">
                                                     <div class="work-experience" id="experiences_0">
-                                                        <input type="text" name="experiences[0][jobTitle]"
-                                                            placeholder="İş Ünvanı Örn. Satış Müdürü">
-                                                        <input type="text" name="experiences[0][city]"
-                                                            placeholder="Şehir/Kasaba Örn. İstanbul">
-                                                        <input type="text" name="experiences[0][employer]"
-                                                            placeholder="İşveren Örn. PwC">
-                                                        <input type="text" name="experiences[0][startDate]"
-                                                            placeholder="Başlangıç Tarihi Örn. Eylül 2018">
-                                                        <input type="text" name="experiences[0][endDate]"
-                                                            placeholder="Bitiş Tarihi Örn. Temmuz 2020">
-                                                        <textarea name="experiences[0][description]"
-                                                            placeholder="Açıklama"></textarea>
+                                                        <div class="aaa__button">
+                                                            <button type="button" onclick="addWorkExperience()"
+                                                                class="add-btn">+ Yeni Ekle</button>
+                                                        </div>
                                                     </div>
+                                                    <input type="text" name="experiences[0][jobTitle]"
+                                                        placeholder="İş Ünvanı Örn. Satış Müdürü">
+                                                    <input type="text" name="experiences[0][city]"
+                                                        placeholder="Şehir/Kasaba Örn. İstanbul">
+                                                    <input type="text" name="experiences[0][employer]"
+                                                        placeholder="İşveren Örn. PwC">
+                                                    <input type="text" name="experiences[0][startDate]"
+                                                        placeholder="Başlangıç Tarihi Örn. Eylül 2018">
+                                                    <input type="text" name="experiences[0][endDate]"
+                                                        placeholder="Bitiş Tarihi Örn. Temmuz 2020">
+                                                    <textarea name="experiences[0][description]"
+                                                        placeholder="Açıklama"></textarea>
                                                 </div>
-                                                <button type="button" onclick="addWorkExperience()" class="add-btn">+
-                                                    Yeni Ekle</button>
                                             </div>
                                             <!-- Eğitim ve Nitelikler -->
                                             <div class="section">
-                                                <h3 onclick="toggleAcademiExperience()">Eğitim ve Nitelikler <span
+                                                <h3 onclick="toggleAcademiExperience()"><i
+                                                        class="fa-solid fa-school pr-3"></i> Eğitim ve Nitelikler <span
                                                         id="academiIcon">+</span></h3>
                                                 <div id="academiExperienceContainer" class="academi-experience-entry">
+                                                    <div class="aaa__button">
+                                                        <button type="button" onclick="addAcademiExperience()"
+                                                            class="add-btn">+
+                                                            Yeni Ekle</button>
+                                                    </div>
                                                     <div class="academi-experience" id="academi_0">
                                                         <input type="text" name="academi[0][jobTitle]"
                                                             placeholder="Okul, Universite İsmi">
@@ -197,28 +151,36 @@
                                                     </div>
 
                                                 </div>
-                                                <button type="button" onclick="addAcademiExperience()" class="add-btn">+
-                                                    Yeni Ekle</button>
+
                                             </div>
                                             <!-- Yabancı Dil  -->
                                             <div class="section">
-                                                <h3 onclick="togglelangs()">Yabancı Dil <span id="togglelang">+</span>
+                                                <h3 onclick="togglelangs()"><i class="fa-solid fa-language pr-3"></i>
+                                                    Yabancı Dil <span id="togglelang">+</span>
                                                 </h3>
                                                 <div id="worklangs" class="work-experience-entry">
+                                                    <div class="aaa__button">
+                                                        <button type="button" onclick="addlangs()" class="add-btn">+
+                                                            Yeni Ekle</button>
+                                                    </div>
                                                     <p class="text-end text__alt">En fazla 5 tane ekleyebilirsiniz.</p>
                                                     <div class="work-experience" id="langs">
                                                         <input type="text" name="langs[0][lang]"
                                                             placeholder="İngilizce A2 vs..">
                                                     </div>
                                                 </div>
-                                                <button type="button" onclick="addlangs()" class="add-btn">+ Yeni
-                                                    Ekle</button>
+
                                             </div>
                                             <!-- Referanslar  -->
                                             <div class="section">
-                                                <h3 onclick="toggleReferanceExperience()">Referanslar <span
+                                                <h3 onclick="toggleReferanceExperience()"><i
+                                                        class="fa-solid fa-gear pr-3"></i> Referanslar <span
                                                         id="toggleAdds">+</span></h3>
                                                 <div id="referanceExperienceContainer" class="work-experience-entry">
+                                                    <div class="aaa__button">
+                                                        <button type="button" onclick="addReferanceExperience()"
+                                                            class="add-btn">+ Yeni Ekle</button>
+                                                    </div>
                                                     <div class="referance-experience" id="referance_0">
                                                         <input type="text" name="referance[0][jobTitle]"
                                                             placeholder="İsim. Murat Alkan">
@@ -229,24 +191,28 @@
                                                     </div>
 
                                                 </div>
-                                                <button type="button" onclick="addReferanceExperience()"
-                                                    class="add-btn">+ Yeni Ekle</button>
+
                                             </div>
                                             <!-- Yetkinlikler -->
                                             <div class="section">
-                                                <h3 onclick="toggleskills()">Yetkinlikler <span id="togglead">+</span>
+                                                <h3 onclick="toggleskills()"> <i class="fa-solid fa-feather pr-3"></i>
+                                                    Yetkinlikler <span id="togglead">+</span>
                                                 </h3>
                                                 <div id="workskills" class="work-experience-entry">
+                                                    <div class="aaa__button">
+                                                        <button type="button" onclick="addskills()" class="add-btn">+
+                                                            Yeni
+                                                            Ekle</button>
+                                                    </div>
                                                     <p class="text-end text__alt">En fazla 5 tane ekleyebilirsiniz.</p>
+
                                                     <div class="work-experience" id="skilles">
                                                         <input type="text" name="skilles[0][skil]"
                                                             placeholder="İkna Becerisi vs..">
                                                     </div>
                                                 </div>
-                                                <button type="button" onclick="addskills()" class="add-btn">+ Yeni
-                                                    Ekle</button>
-                                            </div>
 
+                                            </div>
                                             <div>
                                                 <button type="button" onclick="prevStep()">
                                                     <i class="fa-solid fa-angle-left"></i>
@@ -281,8 +247,9 @@
                                                         Geri</button>
                                                 </div>
 
-                                                <div id="pdfViewer" style="display: none;">
-                                                    <!-- PDF dosyasını göstermek için embed veya iframe elementi -->
+                                                <div id="pdfViewer">
+                                                    <iframe id="pdfIframe" src="" width="100%" height="500px"
+                                                        frameborder="0"></iframe>
                                                 </div>
                                             </div>
                                         </div>
@@ -295,51 +262,15 @@
                     </div>
                 </section>
         </div>
+
+        <script>
+            function showGeneratedCV(pdfUrl) {
+                const pdfIframe = document.getElementById('pdfIframe');
+                pdfIframe.src = pdfUrl;
+                document.getElementById('pdfViewer').style.display = 'block';
+            }
+
+        </script>
         <%- include('./components/footer'); -%>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
             <%- include('./components/script'); -%>
-                <script>
-          // Fotoğraf yükleme butonuna tıklandığında
-document.getElementById('photo').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        const modalImage = document.getElementById('modal-image');
-        modalImage.src = event.target.result;
-        document.getElementById('cropModal').style.display = 'block';
-
-        // Cropper.js ile fotoğrafı kes
-        const cropper = new Cropper(modalImage, {
-            aspectRatio: 1, // Kırpılan görüntünün en-boy oranı
-            viewMode: 1, // Varsayılan görüntüleme modu
-        });
-
-        // Kesme işlemi tamamlandığında
-        document.getElementById('crop-button').addEventListener('click', function() {
-            const croppedDataURL = cropper.getCroppedCanvas().toDataURL(); // Kırpılmış görüntünün veri URL'sini al
-            // Kırpılmış görüntüyü herhangi bir yere ekleyebilirsiniz, örneğin bir img etiketi içine
-            // veya başka bir form elemanına atayabilirsiniz.
-            const img = document.createElement('img');
-            img.src = croppedDataURL;
-            document.body.appendChild(img); // Örneğin, kırpılmış görüntüyü sayfaya ekleyin
-            document.getElementById('cropModal').style.display = 'none'; // Modalı kapat
-        });
-    };
-    reader.readAsDataURL(file);
-});
-
-// Kapatma düğmesine tıklandığında veya modal dışına tıklandığında modalı kapat
-document.getElementsByClassName('close')[0].addEventListener('click', function() {
-    document.getElementById('cropModal').style.display = 'none';
-});
-
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('cropModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-});
-
-
-                </script>

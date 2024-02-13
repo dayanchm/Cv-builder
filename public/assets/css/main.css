@@ -170,15 +170,19 @@ button:hover {
 }
 
 .add-btn {
-    width: 100%;
+    width: 20%;
     padding: 10px 0;
-    margin-top: 10px;
+    margin-top: -45px;
     font-size: 16px;
     color: #fff;
     background-color: #000000;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+.aaa__button{
+    display: flex;
+    justify-content: end;
 }
 
 .section {
@@ -194,7 +198,7 @@ button:hover {
     margin-top: 0;
     margin-bottom: 15px;
     color: #000000;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 600;
     text-align: left;
 }
