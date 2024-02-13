@@ -151,6 +151,7 @@ button:hover {
         height: 40px;
         line-height: 20px;
     }
+
 }
 
 .work-experience-entry {
@@ -269,10 +270,6 @@ button:hover {
     text-align: start;
     padding-top: 10px;
 }
-input,textarea{
-    outline: none;
-}
-
 .remove-btn {
    background-color:  #ff4d4d;
    padding: 10px;
@@ -354,6 +351,9 @@ input,textarea{
   position: relative;
   width: 100%;
 }
+.paddinB{
+    padding-bottom: 6rem !important
+}
 @media screen and (max-width:767px) and (min-width:300px) {
     .title {
         display: none;
@@ -382,5 +382,11 @@ input,textarea{
     }
     .header__padding{
         padding-top: 110px;
+    }
+    .bnt-ads{
+        display: none;
+    }
+    .paddinB{
+        padding-bottom: 2rem !important
     }
 }

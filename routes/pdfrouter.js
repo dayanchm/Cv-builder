@@ -3,11 +3,10 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const PDFDocument = require('pdfkit');
 const path = require('path');
-const fs = require('fs');
 const jimp = require('jimp');
-
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -27,15 +26,19 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
         } = req.body;
 
         const photoBuffer = req.file ? req.file.buffer : null;
+
         const experiences = req.body.experiences;
-        const skills = req.body.skills;
-        const langs = req.body.langs;
-        const reference = req.body.reference;
-        const academic = req.body.academic;
+
+        const skilss = req.body.skilles;
+
+        const langss = req.body.langs;
+
+        const referance = req.body.referance;
+
+        const academi = req.body.academi;
+
         const randomString = Math.random().toString(36).substring(2, 8);
-        
         const fileName = `mobilecv-${randomString}.pdf`;
-        const filePath = path.join(__dirname, 'upload', 'pdf', fileName);
         const doc = new PDFDocument();
 
         res.setHeader('Content-Type', 'application/pdf');
@@ -43,36 +46,79 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
         doc.pipe(res);
 
         doc.font('Helvetica');
-        switch (template) {
-            case 'template1':
-                applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template2':
-                applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template3':
-                applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template4':
-                applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template5':
-                applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template6':
-                applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            case 'template7':
-                applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, experiences, reference, academic);
-                break;
-            default:
-                applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skills, langs, reference, academic);
+        if (template === 'template1') {
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template2') {
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template3') {
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template4') {
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template5') {
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template6') {
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template7') {
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        }
+        else {
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
         }
 
-        doc.pipe(fs.createWriteStream(filePath));
         doc.end();
-        const pdfUrl = `../upload/pdf/${fileName}`;
-        res.status(200).json({ success: true, pdfUrl});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/preview-cv-pdf', async (req, res) => {
+    try {
+        const {
+            template,
+            name,
+            surname,
+            eposta,
+            phonenumber,
+            address,
+            site,
+            position,
+            about,
+            referance,
+            academi,
+            experiences,
+            skilss,
+            langss
+        } = req.body;
+
+        const photoBuffer = null;
+
+        const doc = new PDFDocument();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline');
+
+        doc.font('Helvetica');
+        if (template === 'template1') {
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template2') {
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template3') {
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template4') {
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template5') {
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template6') {
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else if (template === 'template7') {
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        } else {
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+        }
+
+        doc.pipe(res);
+        doc.end();
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

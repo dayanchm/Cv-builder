@@ -87,7 +87,6 @@ function nextStep() {
     }
 }
 
-
 function prevStep() {
     if (currentStep > 0) {
         currentStep--;
