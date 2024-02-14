@@ -8,8 +8,20 @@ function selectPdf(element) {
     console.log('Seçilen PDF: ' + selectedPdf);
 
 }
+window.onload = function() {
+    // ac_mobile div'ini gizle
+    var div = document.getElementById("ac_mobile");
+    div.style.display = "none";
+};
 
-
+function toggleVisibility() {
+    var div = document.getElementById("ac_mobile");
+    if (div.style.display === "none") {
+        div.style.display = "flex";
+    } else {
+        div.style.display = "none";
+    }
+}
 var currentStep = 0;
 showStep(currentStep);
 
@@ -57,34 +69,34 @@ function logFormData() {
 }
 
 function nextStep() {
-    var inputs = document.querySelectorAll('.step.active input[required], .step.active select[required], .step.active textarea[required]');
+    var nameInput = document.getElementById('name');
+    var surnameInput = document.getElementById('surname');
+    var emailInput = document.getElementById('email');
 
-    var missingFields = [];
-    inputs.forEach(function(input) {
-        if (!input.value.trim()) {
-            missingFields.push(input.getAttribute('placeholder'));
-            input.classList.add('error'); 
-        } else {
-            input.classList.remove('error'); 
-        }
-    });
-
-    var missingFieldsContainer = document.getElementById('missingFieldsContainer');
-    missingFieldsContainer.innerHTML = ''; 
-
-    if (missingFields.length > 0) {
-        var missingFieldsMessage = "Lütfen şu alanları doldurun: <br>";
-        missingFields.forEach(function(field) {
-            missingFieldsMessage += "- " + field + "<br>";
-        });
-        missingFieldsContainer.innerHTML = missingFieldsMessage;
+    if (!nameInput.value.trim()) {
+        nameInput.classList.add('error');
     } else {
-        var totalSteps = document.getElementsByClassName("step").length;
-        if (currentStep < totalSteps - 1) {
-            currentStep++;
-            showStep(currentStep);
-        }
+        nameInput.classList.remove('error');
     }
+
+    if (!surnameInput.value.trim()) {
+        surnameInput.classList.add('error');
+    } else {
+        surnameInput.classList.remove('error');
+    }
+
+    if (!emailInput.value.trim()) {
+        emailInput.classList.add('error');
+    } else {
+        emailInput.classList.remove('error');
+    }
+
+    if (!nameInput.value.trim() || !surnameInput.value.trim() || !emailInput.value.trim()) {
+        return;
+    }
+
+    currentStep++;
+    showStep(currentStep);
 }
 
 function prevStep() {
@@ -93,7 +105,6 @@ function prevStep() {
         showStep(currentStep);
     }
 }
-
 function nextStepWithLoading() {
     nextStep();
 }

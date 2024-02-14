@@ -25,6 +25,11 @@
 .pdf-item p {
     margin: 10px 0;
 }
+.btn_asc{
+    width: 200px;
+    display: flex;
+    justify-content: center;
+}
 .form_bg {
     width: 100%;
     max-width: 1600px;
@@ -42,6 +47,10 @@
 
 .step.active {
     display: block;
+}
+label{
+    font-size: 14px;
+    text-align: start;
 }
 
 .progress-bar {
@@ -109,9 +118,15 @@ h2 {
     font-weight: normal;
 }
 
+.error {
+    border-color: red;
+    background-color: #ffe5e5;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="date"],
 textarea,
 select {
     width: 100%;
