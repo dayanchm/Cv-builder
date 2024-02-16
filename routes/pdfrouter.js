@@ -20,7 +20,15 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
             eposta,
             phonenumber,
             address,
+            posta,
+            city,
+            date,
             site,
+            birth,
+            asker,
+            surucu,
+            medeni,
+            gender,
             position,
             about,
         } = req.body;
@@ -47,22 +55,22 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
 
         doc.font('Helvetica');
         if (template === 'template1') {
-            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template2') {
-            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template3') {
-            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template4') {
-            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template5') {
-            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template6') {
-            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template7') {
-            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         }
         else {
-            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         }
 
         doc.end();
@@ -100,21 +108,22 @@ router.get('/preview-cv-pdf', async (req, res) => {
 
         doc.font('Helvetica');
         if (template === 'template1') {
-            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template2') {
-            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template3') {
-            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template4') {
-            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template5') {
-            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template6') {
-            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         } else if (template === 'template7') {
-            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
-        } else {
-            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+        }
+        else {
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
         }
 
         doc.pipe(res);
