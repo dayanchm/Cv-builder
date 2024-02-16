@@ -106,6 +106,15 @@ class SiteController {
             res.status(500).send('Internal Server Error');
         }
     }
+    static async getSSS (req, res) {
+        try {
+            const Faqiest = await Faq.findAll();
+            res.render('sss', { faqList: Faqiest });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
     static async getSlugBlog(req, res) {
         try {
             const { slug } = req.params;

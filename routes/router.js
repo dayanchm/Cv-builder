@@ -42,6 +42,7 @@ router.get("/contact-form", SiteController.getContactForm)
 router.get('/login', SiteController.getLogin)
 router.get('/resume_service', SiteController.getResumService)
 router.get('/success', SiteController.getContactForm)
+router.get('/sss', SiteController.getSSS)
 
 
 // User
