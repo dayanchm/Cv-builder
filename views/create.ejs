@@ -18,43 +18,12 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 </head>
 <%- include('./components/head'); -%>
-
-<script>
-  function showAllPreviews() {
-    const templates = ["template1", "template2", "template3", "template4", "template5", "template6", "template7"];
-
-    for (let i = 0; i < templates.length; i += 3) {
-      const rowDiv = document.createElement("div");
-      rowDiv.classList.add("row");
-
-      for (let j = i; j < i + 3 && j < templates.length; j++) {
-        const template = templates[j];
-
-        const previewUrl = `/preview-cv-pdf?template=${template}`;
-
-        const colDiv = document.createElement("div");
-        colDiv.classList.add("col-lg-4");
-
-        const iframeContainer = document.createElement("div");
-        iframeContainer.classList.add("preview-iframe-container");
-
-        const iframe = document.createElement("iframe");
-        iframe.src = previewUrl;
-        iframe.width = "100%";
-        iframe.height = "300px";
-        iframe.frameBorder = "0";
-
-        iframeContainer.appendChild(iframe);
-        colDiv.appendChild(iframeContainer);
-        rowDiv.appendChild(colDiv);
-      }
-
-      document.getElementById("pdfViewer").appendChild(rowDiv);
-    }
+<style>
+  .checkbox{
+    width: 100px;
   }
+</style>
 
-  window.onload = showAllPreviews;
-</script>
 
 <body>
   <div class="content-wrapper bg-light">
@@ -253,7 +222,10 @@
                 </div>
                 <div class="step">
                   <h2 class="ha__title">Son Adım</h2>
-
+                  <div >
+                    <input type="radio" id="genelSartlarVeGizlilikPolitika" name="genelSartlarVeGizlilikPolitika" required>
+                    <label for="genelSartlarVeGizlilikPolitika">Genel Şartlar ve Gizlilik Politikasını Kabul Ediyorum</label>
+                  </div>
                   <label for="template">Template Seç</label>
                   <select name="template" id="template">
                     <option value="template1">Template 1</option>
@@ -264,9 +236,12 @@
                     <option value="template6">Template 6</option>
                     <option value="template7">Template 7</option>
                   </select>
+               
                   <div class="d-flex flex-column justify-content-center ">
+             
+                    
                     <div>
-                      <button type="submit" onclick="showGeneratedCV()">Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
+                      <button type="submit" >Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
                     </div>
 
                     <div class="forward__left">
@@ -285,6 +260,58 @@
       </div>
     </section>
   </div>
+  <script>
+    function showAllPreviews() {
+        const templates = ["template1", "template2", "template3", "template4", "template5", "template6", "template7"];
+
+        for (let i = 0; i < templates.length; i += 3) {
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("row");
+
+            for (let j = i; j < i + 3 && j < templates.length; j++) {
+                const template = templates[j];
+
+                const previewUrl = `/preview-cv-pdf?template=${template}`;
+
+                const colDiv = document.createElement("div");
+                colDiv.classList.add("col-lg-4");
+
+                const iframeContainer = document.createElement("div");
+                iframeContainer.classList.add("preview-iframe-container");
+
+                const iframe = document.createElement("iframe");
+                iframe.src = previewUrl;
+                iframe.width = "100%";
+                iframe.height = "500px";
+                iframe.frameBorder = "0";
+
+                // İndirme butonunu kaldıralım
+                iframe.addEventListener("load", function() {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const downloadButton = iframeDoc.querySelector("a[href*='download']");
+                    if (downloadButton) {
+                        downloadButton.remove();
+                    }
+                });
+
+                iframeContainer.appendChild(iframe);
+                colDiv.appendChild(iframeContainer);
+                rowDiv.appendChild(colDiv);
+            }
+
+            document.getElementById("pdfViewer").appendChild(rowDiv);
+        }
+    }
+
+    // sayfa yüklendiğinde önizlemeleri göster
+    document.addEventListener("DOMContentLoaded", function() {
+        showAllPreviews();
+    });
+</script>
+
+
+
+  
 
 
   <%- include('./components/footer'); -%>

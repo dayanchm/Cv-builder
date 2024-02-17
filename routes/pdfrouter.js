@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const PDFDocument = require('pdfkit');
 const path = require('path');
-const jimp = require('jimp');
+const fs = require('fs');
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 
-
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+const pdfDirectory = path.join(__dirname, '../uploads/pdf');
 
 router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
     try {
@@ -20,17 +21,17 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
             eposta,
             phonenumber,
             address,
+            site,
+            position,
+            about,
+            date,
             posta,
             city,
-            date,
-            site,
             birth,
             asker,
             surucu,
             medeni,
-            gender,
-            position,
-            about,
+            gender
         } = req.body;
 
         const photoBuffer = req.file ? req.file.buffer : null;
@@ -47,37 +48,44 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
 
         const randomString = Math.random().toString(36).substring(2, 8);
         const fileName = `mobilecv-${randomString}.pdf`;
+        const pdfPath = path.join(pdfDirectory, fileName);
         const doc = new PDFDocument();
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-        doc.pipe(res);
+        doc.pipe(fs.createWriteStream(pdfPath));
 
         doc.font('Helvetica');
         if (template === 'template1') {
-            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template2') {
-            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template3') {
-            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template4') {
-            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template5') {
-            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template6') {
-            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template7') {
-            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender);
+        } else {
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilss, langss, experiences, referance, academi, city, posta, birth, asker, surucu, medeni, gender);
         }
-        else {
-            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
-        }
-
+        res.redirect(`/download-cv/${fileName}`);
         doc.end();
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
+});
+
+router.get('/download-cv/:fileName', (req, res) => {
+    const fileName = req.params.fileName;
+    const pdfPath = path.join(pdfDirectory, fileName);
+
+    res.render('download', { fileName: fileName, pdfPath: pdfPath }); // download.ejs şablonunu render ederken dosya adını ve yolunu gönderiyoruz
 });
 
 router.get('/preview-cv-pdf', async (req, res) => {
@@ -86,9 +94,7 @@ router.get('/preview-cv-pdf', async (req, res) => {
             template,
             name,
             surname,
-            eposta,
             phonenumber,
-            address,
             site,
             position,
             about,
@@ -97,9 +103,21 @@ router.get('/preview-cv-pdf', async (req, res) => {
             experiences,
             skilss,
             langss
-        } = req.body;
+        } = req.query;
 
-        const photoBuffer = null;
+        // Null değerlerini kontrol etmek için güvenli bir şekilde toLowerCase() işlemi yapın
+        const eposta = req.query.eposta !== undefined ? req.query.eposta.toLowerCase() : '';
+        const address = req.query.address !== undefined ? req.query.address.toLowerCase() : '';
+        const posta = req.query.posta !== undefined ? req.query.posta.toLowerCase() : '';
+        const city = req.query.city !== undefined ? req.query.city.toLowerCase() : '';
+        const birth = req.query.birth !== undefined ? req.query.birth.toLowerCase() : '';
+        const asker = req.query.asker !== undefined ? req.query.asker.toLowerCase() : '';
+        const surucu = req.query.surucu !== undefined ? req.query.surucu.toLowerCase() : '';
+        const medeni = req.query.medeni !== undefined ? req.query.medeni.toLowerCase() : '';
+        const gender = req.query.gender !== undefined ? req.query.gender.toLowerCase() : '';
+
+        // Gelen verileri konsolda kontrol etmek için log ekle
+        console.log("Received data:", req.query);
 
         const doc = new PDFDocument();
 
@@ -108,22 +126,21 @@ router.get('/preview-cv-pdf', async (req, res) => {
 
         doc.font('Helvetica');
         if (template === 'template1') {
-            applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate1(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template2') {
-            applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate2(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template3') {
-            applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate3(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template4') {
-            applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate4(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template5') {
-            applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate5(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template6') {
-            applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate6(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         } else if (template === 'template7') {
-            applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
-        }
-        else {
-            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, posta, city, date, birth,asker,surucu,  medeni, gender, position, about, skilss, langss, experiences, referance, academi);
+            applyTemplate7(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
+        } else {
+            applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, null, site, position, about, skilss, langss, experiences, referance, academi, null, city, posta, birth, asker, surucu, medeni, gender);
         }
 
         doc.pipe(res);
@@ -134,13 +151,16 @@ router.get('/preview-cv-pdf', async (req, res) => {
     }
 });
 
-
-function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate1(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
-    const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
-    const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
     const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
 
     const photoPath = path.join(__dirname, '../public/assets/bg.png');
@@ -152,7 +172,8 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     const textWidth = doc.font(RobotoBold).widthOfString(text, { size: fontSize });
     doc.fillColor('#4b30c9').fontSize(fontSize).text(text, 50, verticalOffset, { align: 'left', width: 300 });
     doc.fillColor('black').font(RobotoBold).fontSize(20).text(position, 50, verticalOffset + 60, { align: 'left', width: 300 });
-    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, 50, verticalOffset + 90, { align: 'left', width: 330 });
+    doc.fillColor('black').font(Roboto).fontSize(9).text(date, 50, verticalOffset + 85, { align: 'left', width: 300 });
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, 50, verticalOffset + 95, { align: 'left', width: 330 });
 
     // İletişim Bilgileri
     const contactInfoX = 400;
@@ -170,11 +191,29 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + phonenumber.toLowerCase(), { align: 'left', width: 200 });
     // Konum
     doc.moveDown(0.4);
-    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + address.toLowerCase(), { align: 'left', width: 200 });
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + `${address.toLowerCase()} / ${city.toLowerCase()} / ${posta.toLowerCase()}`, { align: 'left', width: 200 });
     // Website
     doc.moveDown(0.4);
     doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + site.toLowerCase(), { align: 'left', width: 200 });
 
+
+    // Kişisel Bilgiler
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Kişisel Bilgileri', 400, 390, { align: 'left', width: 100 });
+    // Doğum Yeri
+    doc.moveDown(0.4);
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + 'Doğum Yeri: ' + birth.toLowerCase(), { align: 'left', width: 200 });
+    // Askerlik
+    doc.moveDown(0.4);
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + 'Askerlik: ' + asker.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + 'Ehliyet: ' + surucu.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + 'Medeni Durum: ' + medeni.toLowerCase(), { align: 'left', width: 200 });
+    // Cinsiyet 
+    doc.moveDown(0.4);
+    doc.font(Roboto).fontSize(9).fillColor('black').text('• ' + 'Cinsiyet: ' + gender, { align: 'left', width: 200 });
     // Alt
     if (photoPath) {
         const photoWidth = 150;
@@ -197,7 +236,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
 
     // Dil Becerleri
     doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 520, { align: 'left' });
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yabancı Dil', 400, 590, { align: 'left' });
     doc.moveDown(0.5);
 
     if (langs && Array.isArray(langs)) {
@@ -222,7 +261,7 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
     }
     // Yetkinlikler
     doc.moveDown(1);
-    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 400, { align: 'left', width: 100 });
+    doc.font(RobotoBold).fontSize(14).fillColor('#4b30c9').text('Yetkinlikler', 400, 490, { align: 'left', width: 100 });
 
     if (skilles && Array.isArray(skilles)) {
         skilles.forEach((skill, index) => {
@@ -314,11 +353,48 @@ function applyTemplate1(doc, name, surname, eposta, phonenumber, address, photoB
             console.error('References are not defined or not an array.');
         }
     };
-    addSection('İş tecrübesi', addExperiencesSection);
+    const addAcademi = () => {
+        if (academi && Array.isArray(academi)) {
+            academi.forEach((academis, index) => {
+                if (academis && typeof academis === 'object') {
+                    if (index !== 0) {
+                        doc.moveDown(0.1);
+                    }
+                    const jobTitles = Array.isArray(academis.jobTitle) ? academis.jobTitle : [academis.jobTitle];
+                    const employers = Array.isArray(academis.employer) ? academis.employer : [academis.employer];
+                    const startDates = Array.isArray(academis.startDate) ? academis.startDate : [academis.startDate];
+                    const endDates = Array.isArray(academis.endDate) ? academis.endDate : [academis.endDate];
+                    const descriptions = Array.isArray(academis.description) ? academis.description : [academis.description];
+                    jobTitles.forEach((title, i) => {
+                        doc.font(RobotoBold).fontSize(11).fillColor('#4b30c9').text(`${title}`, { align: 'left', width: 200 });
+                        doc.moveDown(0.1);
+                        doc.font(RobotoBold).fontSize(9).fillColor('black').text(`${employers[i]}`, { align: 'left', width: 250 });
+                        doc.moveDown(0.1);
+                        doc.font(RobotoItalic).fontSize(9).fillColor('#000000').text(`${startDates[i]} - ${endDates[i]}`, { align: 'left', });
+                        doc.moveDown(0.1);
+                        doc.font(Roboto).fontSize(9).fillColor('black').text(`${descriptions[i]}`, { align: 'left', width: 250 });
+                    });
+                } else {
+                    console.error(`Invalid experience at index ${index}.`);
+                }
+            });
+        } else {
+            console.error('Experiences are not defined or not an array.');
+        }
+    };
+
+    addSection('İş Deneyimi', addExperiencesSection);
     addSection('Referanslar', addReferencesSection);
+    addSection('Eğitim ve Nitelikler', addAcademi)
 
 }
-function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate2(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -339,9 +415,9 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
     const verticalOffset = 50;
     const verticalOffsets = 85;
 
-    doc.fillColor('black').fontSize(fontSize).text(text, centerX + 10, verticalOffset, { align: 'left' });
-    doc.fillColor('black').font(Roboto).fontSize(16).text(position, centerX + 10, verticalOffset + 35, { align: 'left', });
-    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, centerX + 10, verticalOffset + 65, { align: 'left', });
+    doc.fillColor('black').fontSize(fontSize).text(text, centerX + 30, verticalOffset - 10, { align: 'left' });
+    doc.fillColor('black').font(Roboto).fontSize(16).text(position, centerX + 30, verticalOffset + 35, { align: 'left', });
+    doc.fillColor('black').font(RobotoLight).fontSize(10).text(about, centerX + 30, verticalOffset + 65, { align: 'left', });
 
     const lineY = verticalOffsets + 25;
     doc.lineWidth(1).moveTo(centerX, lineY).lineTo(centerX + 300, lineY).strokeColor('#EEEDEB').stroke();
@@ -355,28 +431,42 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
 
     doc.font(RobotoBold).fontSize(14).fillColor('white').text('İLETİŞİM BİLGİLERİ', { align: 'left' });
     // E-posta
-    doc.moveDown(1.3);
-    doc.font(Roboto).fontSize(9).fillColor('white').text('E-posta:', { align: 'left', bold: true });
-    doc.moveDown(0.5);
-    doc.font(RobotoBold).fontSize(10).fillColor('white').text(eposta, { align: 'left', width: 150 });
     doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text(eposta, { align: 'left', width: 150 });
+    doc.moveDown(0.5);
     // Telefon Numarası
-    doc.font(Roboto).fontSize(9).fillColor('white').text('Telefon Numarasi:', { align: 'left', bold: true });
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text(phonenumber, { align: 'left', width: 100 });
     doc.moveDown(0.5);
-    doc.font(RobotoBold).fontSize(10).fillColor('white').text(phonenumber, { align: 'left', width: 100 });
-    doc.moveDown(1);
     // Konum
-    doc.font(Roboto).fontSize(9).fillColor('white').text('Konum:', { align: 'left', bold: true, });
-    doc.moveDown(0.5);
-    doc.font(RobotoBold).fontSize(10).fillColor('white').text(address, { align: 'left', width: 150 });
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text(`${address} / ${city} / ${posta}`, { align: 'left', width: 150 });
     doc.font(Roboto);
-    // Website
-    doc.moveDown(1);
-    doc.font(Roboto).fontSize(9).fillColor('white').text('Website:', { align: 'left', bold: true });
     doc.moveDown(0.5);
-    doc.font(RobotoBold).fontSize(10).fillColor('white').text(site, { align: 'left' });
+    // Website
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text(site, { align: 'left' });
     doc.font(Roboto);
 
+    // Kişisel
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('white').text('KİŞİSEL BİLGİLER', contactInfoX, contactInfoY + 120, { align: 'left' });
+
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Doğum Yeri: ' + birth.toLowerCase(), { align: 'left', width: 200 });
+    // Askerlik
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Askerlik: ' + asker.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Ehliyet: ' + surucu.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Medeni Durum: ' + medeni.toLowerCase(), { align: 'left', width: 200 });
+    // Cinsiyet 
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Cinsiyet: ' + gender, { align: 'left', width: 200 });
+
+    // Cinsiyet 
+    doc.moveDown(0.4);
+    doc.font(RobotoBold).fontSize(9).fillColor('white').text('• ' + 'Doğum Günü: ' + date, { align: 'left', width: 200 });
     // Fotoğraf
     if (photoBuffer) {
         doc.image(photoBuffer, 60, 45, { width: 140, height: 140 });
@@ -423,7 +513,7 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
                     doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${title}`, { align: 'right', width: 300 });
                 });
                 doc.moveUp(1);
-                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left', width: 400 });
+                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left', width: 150 });
                 doc.moveDown(0.6);
                 experience.employer.forEach(emp => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left', width: 300 });
@@ -572,18 +662,26 @@ function applyTemplate2(doc, name, surname, eposta, phonenumber, address, photoB
 
 
 }
-function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate3(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
-    const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
     const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
 
     doc.rect(0, 0, 1920, 1000).fill('#fef9f9');
     doc.rect(-2, 0, 1920, 150).fill('#fce7f1');
     doc.rect(50, 0, 200, 1920).fill('#edeefc');
 
+    if (photoBuffer) {
+        doc.image(photoBuffer, 80, 45, { width: 140, height: 140 });
+    }
 
     // Adı
     const fontSize = 25;
@@ -593,8 +691,8 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
 
     const verticalOffset = 50;
 
-    doc.fillColor('#3C3633').fontSize(fontSize).text(text, centerX + 60, verticalOffset, { align: 'left', });
-    doc.fillColor('#3C3633').font(RobotoItalic).fontSize(16).text(position, centerX + 60, verticalOffset + 60, { align: 'left', });
+    doc.fillColor('#3C3633').fontSize(fontSize).text(text, centerX + 80, verticalOffset, { align: 'left', });
+    doc.fillColor('#3C3633').font(RobotoItalic).fontSize(16).text(position, centerX + 80, verticalOffset + 60, { align: 'left', });
 
 
     // Hakkımda
@@ -621,10 +719,96 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(phonenumber, { align: 'left', width: 180 });
     doc.moveDown(0.5);
     // Konum
-    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(address, { align: 'left', width: 180 });
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(`${address} / ${city} / ${posta}`, { align: 'left', width: 180 });
     // Website
     doc.moveDown(0.5);
     doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(site, { align: 'left' });
+
+
+
+    // Kişisel
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('#3C3633').text('Kişisel', contactInfosX, contactInfosY + 120, { align: 'left' });
+
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Doğum Yeri: ' + birth.toLowerCase(), { align: 'left', width: 200 });
+    // Askerlik
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Askerlik: ' + asker.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Ehliyet: ' + surucu.toLowerCase(), { align: 'left', width: 200 });
+    // Ehliyet
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Medeni Durum: ' + medeni.toLowerCase(), { align: 'left', width: 200 });
+    // Cinsiyet 
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Cinsiyet: ' + gender, { align: 'left', width: 200 });
+    // Doğum Günü 
+    doc.moveDown(0.4);
+    doc.font(RobotoLight).fontSize(9).fillColor('#3C3633').text('• ' + 'Doğum Günü: ' + date, { align: 'left', width: 200 });
+
+
+    // Yetenekler
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(14).fillColor('#3C3633').text('Yetenekler', contactInfosX, contactInfosY + 240, { align: 'left' });
+    doc.moveDown(0.5);
+
+    const maxSkillsToShow = 5;
+
+    if (skilles && Array.isArray(skilles)) {
+        for (let index = 0; index < Math.min(skilles.length, maxSkillsToShow); index++) {
+            const skill = skilles[index];
+            if (skill && typeof skill === 'object' && skill.skil) {
+                if (index !== 0) {
+                    doc.moveDown(0.5);
+                }
+                const skillText = `${skill.skil}`;
+                const skillLines = skillText.split(',').map(line => line.trim());
+
+                doc.font(Roboto)
+                    .fontSize(12)
+                    .fillColor('#3C3633')
+                    .lineGap(6)
+                    .text(`- ${skillLines.join('\n- ')}`, { align: 'left' });
+            } else {
+                console.error(`Invalid skill at index ${index}.`);
+            }
+        }
+    } else {
+        console.error('Skills are not defined or not an array.');
+    }
+
+    // Dil Becerileri
+    doc.moveDown(2);
+    doc.font(RobotoBold).fontSize(14).fillColor('#3C3633').text('Yabancı Dil ', contactInfosX, contactInfosY + 370, { align: 'left' });
+
+    const maxLanguagesToShow = 5;
+    let displayedLanguages = 0;
+
+    if (langs && Array.isArray(langs)) {
+        langs.forEach((langg, index) => {
+            if (displayedLanguages < maxLanguagesToShow && langg && typeof langg === 'object' && langg.lang) {
+                if (displayedLanguages !== 0) {
+                    doc.moveDown(1);
+                }
+                const langText = `${langg.lang}`;
+                const langLines = langText.split(',').map(line => line.trim());
+                doc.font(Roboto)
+                    .fontSize(12)
+                    .fillColor('#3C3633')
+                    .lineGap(6)
+                    .text(`- ${langLines.join('\n- ')}`, { align: 'left' });
+
+                displayedLanguages++;
+            } else {
+                console.error(`Invalid lang at index ${index}.`);
+            }
+        });
+    } else {
+        console.error('Languages are not defined or not an array.');
+    }
+
 
     // Deneyimler, İş, Referans, Akademik
     const contactRefX = 120;
@@ -668,7 +852,7 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
                     doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${title}`, { align: 'right', width: 200 });
                 });
                 doc.moveUp(1);
-                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left', width: 200 });
+                doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left', width: 90 });
                 doc.moveDown(0.6);
                 experience.employer.forEach(emp => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left', width: 300 });
@@ -680,35 +864,35 @@ function applyTemplate3(doc, name, surname, eposta, phonenumber, address, photoB
             }
         });
     };
-  
-const addAcademiSection = () => {
+
+    const addAcademiSection = () => {
         const transformExperiences = (academi) => {
-            return academi.map((experience) => {
+            return academi.map((academis) => {
                 return {
-                    jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
-                    employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
-                    startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
-                    endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
+                    jobTitle: Array.isArray(academis.jobTitle) ? academis.jobTitle : [academis.jobTitle],
+                    employer: Array.isArray(academis.employer) ? academis.employer : [academis.employer],
+                    startDate: Array.isArray(academis.startDate) ? academis.startDate : [academis.startDate],
+                    endDate: Array.isArray(academis.endDate) ? academis.endDate : [academis.endDate],
                 };
             });
         };
 
         const transformedExperiences = transformExperiences(academi || []);
-        transformedExperiences.forEach((experience, index) => {
-            if (Array.isArray(experience.jobTitle) &&
-                Array.isArray(experience.employer)) {
+        transformedExperiences.forEach((academis, index) => {
+            if (Array.isArray(academis.jobTitle) &&
+                Array.isArray(academis.employer)) {
 
                 if (index !== 0) {
                     doc.moveDown(0.2);
                 }
-                experience.jobTitle.forEach(title => {
+                academis.jobTitle.forEach(title => {
                     // Metni sağa hizala
                     doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${title}`, { align: 'right', width: 200 });
                 });
                 doc.moveUp(1);
-                doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'left', width: 200 });
+                doc.font(RobotoBold).fontSize(10).fillColor('#000000').text(`${academis.startDate.join(' - ')} - ${academis.endDate.join(' - ')}`, { align: 'left', width: 200 });
                 doc.moveDown(0.6);
-                experience.employer.forEach(emp => {
+                academis.employer.forEach(emp => {
                     doc.font(Roboto).fontSize(10).fillColor('black').text(`${emp}`, { align: 'right', width: 200 });
                 });
                 doc.moveDown(1);
@@ -744,7 +928,7 @@ const addAcademiSection = () => {
                 });
                 doc.moveDown(0.5)
                 referance.employer.forEach(emp => {
-                    doc.font(RobotoBold).fontSize(10).fillColor('#bf5c46').text(`${emp}`, { align: 'left' });
+                    doc.font(RobotoBold).fontSize(10).fillColor('#000000').text(`${emp}`, { align: 'left' });
                 });
             } else {
                 console.error(`Invalid experience at index ${index}.`);
@@ -755,22 +939,19 @@ const addAcademiSection = () => {
 
     addSection('İŞ DENEYİMİLERİ', addExperiencesSection);
     addSection('REFERANSLAR', addReferencesSection);
+    addSection('EĞİTİM VE NİTELİKLER', addAcademiSection);
 
-    if (photoBuffer) {
-        const circleX = 157 - 5; // Dairenin x koordinatını sola kaydır
-        const circleY = 115 + 40; // Dairenin y koordinatını aşağı kaydır
-        const circleRadius = 80; // Dairenin yarıçapı
 
-        const imageX = circleX - circleRadius; // Yeni x koordinatı, sola kaydırılmış
-        const imageY = circleY - circleRadius; // Yeni y koordinatı, yukarı kaydırılmış
-
-        // Yuvarlak bir maske ekleyerek resmi çiz
-        doc.circle(circleX, circleY, circleRadius).clip().image(photoBuffer, imageX, imageY, { width: 160, height: 160 }).restore();
-    }
 
 
 }
-function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate4(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -794,10 +975,18 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
     const textWidth = doc.font(RobotoMedium).widthOfString(text, { size: fontSize });
     const centerX = (doc.page.width - textWidth) / 2;
 
-    doc.rect(280, 135, 1920, 30).fill('#EEEEEE');
+    doc.rect(260, 135, 1920, 30).fill('#EEEEEE');
     const verticalOffset = 50;
     doc.fillColor('black').fontSize(fontSize).text(text, centerX + 75, verticalOffset, { align: 'left' });
     doc.fillColor('black').font(Roboto).fontSize(20).text(position, centerX + 80, verticalOffset + 90, { align: 'left', width: 250 });
+
+
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Doğum Yeri: ' + birth.toLowerCase(), centerX + 80, verticalOffset + 120, { align: 'left', width: 250 })
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Doğum Tarihi: ' + date.toLowerCase(), centerX + 80, verticalOffset + 130, { align: 'left', width: 250 })
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Ehliyet: ' + surucu.toLowerCase(), centerX + 80, verticalOffset + 140, { align: 'left', width: 250 })
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Askerlik: ' + asker.toLowerCase(), centerX + 80, verticalOffset + 150, { align: 'left', width: 250 })
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Medeni Durum: ' + medeni.toLowerCase(), centerX + 80, verticalOffset + 160, { align: 'left', width: 250 })
+    doc.fillColor("black").font(Roboto).fontSize(9).text('Cinsiyet: ' + gender, centerX + 80, verticalOffset + 170, { align: 'left', width: 250 })
 
     // İletişim Bilgiler
     const contactInfoX = 75;
@@ -808,17 +997,19 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(Roboto).fontSize(20).fillColor('#000000').text('İLETİŞİM', { align: 'left' });
 
     const lineY = contactInfoY + 25;
-    doc.lineWidth(1).moveTo(centerX-15, lineY).lineTo(contactInfoX-15, lineY).strokeColor('#000000').stroke();
+    doc.lineWidth(1).moveTo(centerX - 15, lineY).lineTo(contactInfoX - 15, lineY).strokeColor('#000000').stroke();
     // E-posta
-    doc.moveDown(0.5);
+    doc.moveDown(0.3);
     doc.font(Roboto).fontSize(9).fillColor('#000000').text(eposta, { align: 'left', width: 180 });
-    doc.moveDown(0.5);
+    doc.moveDown(0.3);
     // Telefon Numarası
     doc.font(Roboto).fontSize(9).fillColor('#000000').text(phonenumber, { align: 'left', width: 180 });
     // Website
-    doc.moveDown(0.5);
+    doc.moveDown(0.3);
     doc.font(Roboto).fontSize(9).fillColor('#000000').text(site, { align: 'left', width: 180 });
-    doc.font(Roboto);
+
+    doc.moveDown(0.3);
+    doc.font(Roboto).fontSize(9).fillColor('#000000').text(`${address.toLowerCase()} / ${city.toLowerCase()} / ${posta.toLowerCase()}`, { align: 'left', width: 150 });
 
     // Hakkında
     const contactInfoXX = 75;
@@ -827,7 +1018,7 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
     doc.y = contactInfoYY;
     doc.font(Roboto).fontSize(20).fillColor('#000000').text('HAKKINDA', { align: 'left' });
     const linesY = contactInfoYY + 25;
-    doc.lineWidth(1).moveTo(centerX-15, linesY).lineTo(contactInfoXX-15, linesY).strokeColor('#000000').stroke();
+    doc.lineWidth(1).moveTo(centerX - 15, linesY).lineTo(contactInfoXX - 15, linesY).strokeColor('#000000').stroke();
     doc.fillColor('black').font(RobotoLight).fontSize(8).text(about, contactInfoXX, contactInfoYY + 30, { align: 'left', width: 170 });
 
     // Yetenekler
@@ -839,7 +1030,7 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
     doc.moveDown(1);
     doc.font(Roboto).fontSize(20).fillColor('000000').text('BECERİLER', contactInfoXXX, contactInfoYYY, { align: 'left' });
     const lineYY = contactInfoYYY + 10;
-    doc.lineWidth(1).moveTo(contactInfoXXX-15, lineYY).lineTo(contactInfoXXX-15, lineYY).strokeColor('#000000').stroke();
+    doc.lineWidth(1).moveTo(contactInfoXXX - 15, lineYY).lineTo(contactInfoXXX - 15, lineYY).strokeColor('#000000').stroke();
     doc.moveDown(0.5);
 
     const maxSkillsToShow = 5;
@@ -869,7 +1060,7 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
 
     doc.moveDown(2);
     doc.font(Roboto).fontSize(20).fillColor('#000000').text('YABANCI DİL ', contactInfoXXX, contactInfoYYY + 110, { align: 'left' });
-    doc.lineWidth(1).moveTo(centerX-15, lineYY + 90).lineTo(contactInfoXXX-15, lineYY + 90).strokeColor('#000000').stroke();
+    doc.lineWidth(1).moveTo(centerX - 15, lineYY + 90).lineTo(contactInfoXXX - 15, lineYY + 90).strokeColor('#000000').stroke();
     doc.moveDown(0.5);
 
     const maxLanguagesToShow = 5;
@@ -970,12 +1161,16 @@ function applyTemplate4(doc, name, surname, eposta, phonenumber, address, photoB
     addSection('Referanslar', addReferencesSection);
 
 }
-function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate5(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
-    const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
-    const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
     const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
 
     doc.rect(0, 100, 230, 1920).fill('#EDEDED');
@@ -1021,11 +1216,36 @@ function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(phonenumber, { align: 'left', width: 180 });
     doc.moveDown(0.7);
     // Konum
-    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(address.toLowerCase(), { align: 'left', width: 180 });
+    doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(`${address.toLowerCase()} / ${city.toLowerCase()} / ${posta.toLowerCase()}`, { align: 'left', width: 180 });
     // Website
     doc.moveDown(0.7);
     doc.font(Roboto).fontSize(9).fillColor('#3C3633').text(site, { align: 'left' });
 
+
+     // Kişisel
+     doc.font(RobotoBold).fontSize(13).fillColor('#000000').text('KİŞİSEL', 40, 570, { align: 'left' });
+     doc.lineWidth(1).moveTo(contactInfosX, lineY).lineTo(contactInfosX + 190, lineY).strokeColor('#000000').stroke();
+ 
+     // Doğum Yeri
+     doc.moveDown(0.5);
+     doc.font(Roboto).fontSize(9).fillColor('#000000').text('Doğum Yeri :'+ birth.toLowerCase(), { align: 'left', width: 180 });
+ 
+     // Doğum Gunu
+     doc.moveDown(0.5);
+     doc.font(Roboto).fontSize(9).fillColor('#000000').text('Doğum Günü :'+ date, { align: 'left', width: 180 });
+     // Ehliyet
+     doc.moveDown(0.5);
+     doc.font(Roboto).fontSize(9).fillColor('#000000').text('Ehliyet :'+surucu, { align: 'left', width: 180 });
+     // Cinsiyet
+     doc.moveDown(0.5);
+     doc.font(Roboto).fontSize(9).fillColor('#000000').text('Cinsiyet :'+ gender, { align: 'left', width: 180 });
+      // Medeni Durum
+      doc.moveDown(0.5);
+      doc.font(Roboto).fontSize(9).fillColor('#000000').text('Medeni Durum :'+ medeni, { align: 'left', width: 180 });
+ 
+     // Askerlik
+     doc.moveDown(0.5);
+     doc.font(Roboto).fontSize(9).fillColor('#000000').text('Askerlik :'+ asker, { align: 'left', width: 180 });
     // Yetenekler
     doc.moveDown(1);
     doc.font(RobotoBold).fontSize(13).fillColor('#000000').text('YETENEKLER', 40, 340, { align: 'left' });
@@ -1086,6 +1306,8 @@ function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoB
         console.error('Languages are not defined or not an array.');
     }
 
+   
+
     const contactRefX = 200;
     const contactRefY = 300;
     doc.x = contactRefX;
@@ -1123,7 +1345,7 @@ function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoB
                     const endDates = Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate];
                     const descriptions = Array.isArray(experience.description) ? experience.description : [experience.description];
                     jobTitles.forEach((title, i) => {
-                        doc.font(RobotoItalic).fontSize(9).fillColor('#000000').text(`${startDates[i]} - ${endDates[i]}`, { align: 'left', width: 200 });
+                        doc.font(RobotoItalic).fontSize(9).fillColor('#000000').text(`${startDates[i]} - ${endDates[i]}`, { align: 'left', width: 80 });
                         doc.moveUp(0.8);
                         doc.font(RobotoBold).fontSize(9).fillColor('#000000').text(`${title}`, { align: 'right', width: 200 });
                         doc.moveDown(0.2);
@@ -1181,13 +1403,18 @@ function applyTemplate5(doc, name, surname, eposta, phonenumber, address, photoB
 
 
 }
-function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate6(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
     const RobotoLight = path.join(__dirname, '../font/Roboto/Roboto-Light.ttf');
     const RobotoThin = path.join(__dirname, '../font/Roboto/Roboto-Thin.ttf');
-    const RobotoItalic = path.join(__dirname, '../font/Roboto/Roboto-Italic.ttf');
 
 
     const Whatsapp = path.join(__dirname, '../public/assets/icon/whatsapp.png');
@@ -1227,9 +1454,7 @@ function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoB
     const verticalOffset = 50;
 
     doc.fillColor('#000000').fontSize(fontSize).text(text, centerX - 20, verticalOffset, { align: 'left', });
-    doc.fillColor('#000000').font(RobotoMedium).fontSize(14).text(pos, centerX - 20, verticalOffset + 40, { align: 'left', });
-
-
+    doc.fillColor('#000000').font(RobotoMedium).fontSize(14).text(pos, centerX - 20, verticalOffset + 45, { align: 'left', });
 
 
     const contactRefX = 200;
@@ -1352,19 +1577,37 @@ function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(RobotoBold).fontSize(13).fillColor('#000000').text('Profil'.toUpperCase(), { align: 'left' });
     doc.moveDown(0.5);
 
-    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(eposta, { align: 'left', width: 180 });
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(site, { align: 'left', width: 180 });
     doc.moveDown(0.5);
-    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(address.toLowerCase(), { align: 'left', width: 180 });
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(`${address.toLowerCase()}/ ${city.toLowerCase()} / ${posta.toLowerCase()}`, { align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(date, { align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text(gender, { align: 'left', width: 180 });
+    doc.moveDown(0.5);
     doc.lineWidth(0.4).moveTo(contactInfosX, lineY + 100).lineTo(contactInfosX + 180, lineY + 100).strokeColor('#C7C8CC').stroke();
     doc.lineWidth(0.4).moveTo(contactInfosX, lineY + 250).lineTo(contactInfosX + 180, lineY + 250).strokeColor('#C7C8CC').stroke();
     doc.lineWidth(0.4).moveTo(contactInfosX, lineY + 390).lineTo(contactInfosX + 180, lineY + 390).strokeColor('#C7C8CC').stroke();
-
 
     // Yetenekler
     doc.moveDown(1);
     doc.font(RobotoBold).fontSize(13).fillColor('#000000').text('YETENEKLER', 45, 320, { align: 'left' });
     doc.moveDown(0.5);
+    // Kişisel
+    doc.moveDown(1);
+    doc.font(RobotoBold).fontSize(13).fillColor('#000000').text('KİŞİSEL', 45, 610, { align: 'left' });
+    doc.moveDown(0.5);
 
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text('Doğum yeri: '+ birth.toLowerCase(),{ align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text('Cinsiyet: '+ gender.toLowerCase(), { align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text('Ehliyet: '+ surucu.toLowerCase(), { align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text('Medeni Durumu: '+medeni.toLowerCase(), { align: 'left', width: 180 });
+    doc.moveDown(0.5);
+    doc.font(RobotoLight).fontSize(10).fillColor('#3C3633').text('Askerlik: '+ asker.toLowerCase(), { align: 'left', width: 180 });
+    doc.moveDown(0.5);
     const maxSkillsToShow = 5;
 
     if (skilles && Array.isArray(skilles)) {
@@ -1428,7 +1671,13 @@ function applyTemplate6(doc, name, surname, eposta, phonenumber, address, photoB
     }
 
 }
-function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, experiences, referance, academi) {
+function applyTemplate7(doc, name, surname,
+    eposta,
+    phonenumber,
+    address,
+    photoBuffer,
+    site,
+    position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
     const Roboto = path.join(__dirname, '../font/Roboto/Roboto-Regular.ttf');
     const RobotoMedium = path.join(__dirname, '../font/Roboto/Roboto-Medium.ttf');
     const RobotoBold = path.join(__dirname, '../font/Roboto/Roboto-Bold.ttf');
@@ -1468,13 +1717,20 @@ function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoB
 
     // Ad Soyad
 
-    const fontSize = 20;
+    const fontSize = 19;
     const text = `${name} ${surname}`;
     const textWidth = doc.font(RobotoBold).widthOfString(text, { size: fontSize });
     const centerX = (doc.page.width - textWidth) / 2;
     const verticalOffset = 50;
-    doc.fillColor('black').fontSize(fontSize).text(text, centerX - 180, verticalOffset, { align: 'left' });
-    doc.fillColor('black').font(Roboto).fontSize(16).text(position, centerX - 180, verticalOffset + 35, { align: 'left', });
+    doc.fillColor('black').fontSize(fontSize).text(text, centerX - 150, verticalOffset, { align: 'left',width:330 });
+    doc.fillColor('black').font(Roboto).fontSize(16).text(position, centerX - 150, verticalOffset + 45, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Doğum Günü: '+ date, centerX - 150, verticalOffset + 65, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Doğum Yeri: '+ birth, centerX - 150, verticalOffset + 75, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Askerlik: '+ asker, centerX - 150, verticalOffset + 85, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Ehliyet: '+ surucu, centerX - 150, verticalOffset + 95, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Medeni Durum: '+ medeni, centerX - 150, verticalOffset + 105, { align: 'left', });
+    doc.fillColor('black').font(Roboto).fontSize(9).text('Cinsiyet: '+ gender, centerX - 150, verticalOffset + 115, { align: 'left', });
+
 
 
     // Fotoğraf
@@ -1482,7 +1738,6 @@ function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoB
 
 
     // İletişim Bilgiler
-
     const contactInfoX = 50;
     const contactInfoY = 250;
     doc.x = contactInfoX;
@@ -1506,7 +1761,7 @@ function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoB
     doc.font(Roboto).fontSize(10).fillColor('#000000').text(phonenumber, { align: 'left', width: 180 });
     // Website
     doc.moveDown(0.5);
-    doc.font(Roboto).fontSize(10).fillColor('#000000').text(address.toLowerCase(), { align: 'left', width: 180 });
+    doc.font(Roboto).fontSize(10).fillColor('#000000').text(`${address.toLowerCase()} / ${city.toLowerCase()} / ${posta.toLowerCase()}`, { align: 'left', width: 180 });
     doc.font(Roboto);
 
     // Hakkında
@@ -1670,8 +1925,47 @@ function applyTemplate7(doc, name, surname, eposta, phonenumber, address, photoB
         });
     };
 
+    const addAcademi = () => {
+        const transformExperiences = (academi) => {
+            return academi.map((experience) => {
+                return {
+                    jobTitle: Array.isArray(experience.jobTitle) ? experience.jobTitle : [experience.jobTitle],
+                    employer: Array.isArray(experience.employer) ? experience.employer : [experience.employer],
+                    startDate: Array.isArray(experience.startDate) ? experience.startDate : [experience.startDate],
+                    endDate: Array.isArray(experience.endDate) ? experience.endDate : [experience.endDate],
+                };
+            });
+        };
+
+        const transformedExperiences = transformExperiences(academi || []);
+        transformedExperiences.forEach((experience, index) => {
+            if (Array.isArray(experience.jobTitle) &&
+                Array.isArray(experience.employer)) {
+
+                if (index !== 0) {
+                    doc.moveDown(0.2);
+                }
+
+                experience.jobTitle.forEach(title => {
+                    doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${title}`, { align: 'left', width: 200 });
+                });
+                doc.moveUp(0.8);
+                doc.font(RobotoBold).fontSize(10).fillColor('black').text(`${experience.startDate.join(' - ')} - ${experience.endDate.join(' - ')}`, { align: 'right', width: 200 });
+                doc.moveDown(0.6);
+                experience.employer.forEach(emp => {
+                    doc.font(RobotoLight).fontSize(10).fillColor('black').text(`${emp}`, { align: 'left' });
+                });
+                doc.moveDown(0.9);
+
+            } else {
+                console.error(`Invalid experience at index ${index}. One or more fields are not arrays.`);
+            }
+        });
+    };
+
     addSection('İŞ DENEYİMİ', addExperiencesSection);
     addSection('REFERANSLAR', addReferencesSection);
+    addSection('EĞİTİM VE NİTELİKLER', addAcademi);
 
 }
 function applyDefaultTemplate(doc, name, surname, eposta, phonenumber, address, photoBuffer, site, position, about, skilles, langs, referance, academi) {

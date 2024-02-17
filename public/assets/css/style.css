@@ -34965,11 +34965,6 @@ mark.doc {
     }
 }
 
-input,
-select,
-textarea {
-    -webkit-appearance: none !important
-}
 
 .form-floating:not(.form-control:disabled)::before {
     background: 0 0
