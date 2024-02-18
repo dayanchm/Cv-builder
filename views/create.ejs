@@ -249,8 +249,6 @@
                         <i class="fa-solid fa-angle-left"></i>
                         Geri</button>
                     </div>
-
-                    <div id="pdfViewer"></div>
                   </div>
                 </div>
               </form>
@@ -260,58 +258,44 @@
       </div>
     </section>
   </div>
-  <script>
-    function showAllPreviews() {
-        const templates = ["template1", "template2", "template3", "template4", "template5", "template6", "template7"];
-
-        for (let i = 0; i < templates.length; i += 3) {
-            const rowDiv = document.createElement("div");
-            rowDiv.classList.add("row");
-
-            for (let j = i; j < i + 3 && j < templates.length; j++) {
-                const template = templates[j];
-
-                const previewUrl = `/preview-cv-pdf?template=${template}`;
-
-                const colDiv = document.createElement("div");
-                colDiv.classList.add("col-lg-4");
-
-                const iframeContainer = document.createElement("div");
-                iframeContainer.classList.add("preview-iframe-container");
-
-                const iframe = document.createElement("iframe");
-                iframe.src = previewUrl;
-                iframe.width = "100%";
-                iframe.height = "500px";
-                iframe.frameBorder = "0";
-
-                // İndirme butonunu kaldıralım
-                iframe.addEventListener("load", function() {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const downloadButton = iframeDoc.querySelector("a[href*='download']");
-                    if (downloadButton) {
-                        downloadButton.remove();
-                    }
-                });
-
-                iframeContainer.appendChild(iframe);
-                colDiv.appendChild(iframeContainer);
-                rowDiv.appendChild(colDiv);
-            }
-
-            document.getElementById("pdfViewer").appendChild(rowDiv);
-        }
-    }
-
-    // sayfa yüklendiğinde önizlemeleri göster
-    document.addEventListener("DOMContentLoaded", function() {
-        showAllPreviews();
-    });
-</script>
 
 
 
   
+  <script>
+    // PDF ve JPG dosyalarını oluşturmak için JavaScript fonksiyonu
+    function createPDFAndJPG() {
+        // Form verilerini al
+        const form = document.getElementById('multiStepForm');
+        const formData = new FormData(form);
+
+        // PDF ve JPG dosyalarını oluşturmak için POST isteği gönder
+        fetch('/create-cv-pdf', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Bir hata oluştu');
+            }
+            // PDF ve JPG dosyalarını indir
+            response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            // Hata mesajını kullanıcıya göster
+            alert('İşlem sırasında bir hata oluştu');
+        });
+    }
+</script>
 
 
   <%- include('./components/footer'); -%>
