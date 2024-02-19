@@ -64,7 +64,7 @@ function applyTemplate7(doc, name, surname,
 
 
     // Fotoğraf
-    doc.image(photoBuffer, 350, 50, { width: 180, height: 180 }); // Resmi ekleyin
+    doc.image(photoBuffer, 350, 50, { width: 180, height: 180 });
 
 
     // İletişim Bilgiler

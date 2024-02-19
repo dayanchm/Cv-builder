@@ -8,10 +8,10 @@ function applyTemplate5(doc, name, surname,
     photoBuffer,
     site,
     position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
-    const Roboto = path.join(__dirname, '../..font/Roboto/Roboto-Regular.ttf');
-    const RobotoBold = path.join(__dirname, '../..font/Roboto/Roboto-Bold.ttf');
-    const RobotoLight = path.join(__dirname, '../..font/Roboto/Roboto-Light.ttf');
-    const RobotoItalic = path.join(__dirname, '../..font/Roboto/Roboto-Italic.ttf');
+    const Roboto = path.join(__dirname, '../../font/Roboto/Roboto-Regular.ttf');
+    const RobotoBold = path.join(__dirname, '../../font/Roboto/Roboto-Bold.ttf');
+    const RobotoLight = path.join(__dirname, '../../font/Roboto/Roboto-Light.ttf');
+    const RobotoItalic = path.join(__dirname, '../../font/Roboto/Roboto-Italic.ttf');
 
     doc.rect(0, 100, 230, 1920).fill('#EDEDED');
 

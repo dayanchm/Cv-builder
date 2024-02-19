@@ -7,15 +7,15 @@ function applyTemplate6(doc, name, surname,
     photoBuffer,
     site,
     position, about, skilles, langs, experiences, referance, academi, date, city, posta, birth, asker, surucu, medeni, gender) {
-    const Roboto = path.join(__dirname, '../..font/Roboto/Roboto-Regular.ttf');
-    const RobotoMedium = path.join(__dirname, '../..font/Roboto/Roboto-Medium.ttf');
-    const RobotoBold = path.join(__dirname, '../..font/Roboto/Roboto-Bold.ttf');
-    const RobotoLight = path.join(__dirname, '../..font/Roboto/Roboto-Light.ttf');
-    const RobotoThin = path.join(__dirname, '../..font/Roboto/Roboto-Thin.ttf');
+    const Roboto = path.join(__dirname, '../../font/Roboto/Roboto-Regular.ttf');
+    const RobotoMedium = path.join(__dirname, '../../font/Roboto/Roboto-Medium.ttf');
+    const RobotoBold = path.join(__dirname, '../../font/Roboto/Roboto-Bold.ttf');
+    const RobotoLight = path.join(__dirname, '../../font/Roboto/Roboto-Light.ttf');
+    const RobotoThin = path.join(__dirname, '../../font/Roboto/Roboto-Thin.ttf');
 
 
-    const Whatsapp = path.join(__dirname, '../..public/assets/icon/whatsapp.png');
-    const Email = path.join(__dirname, '../..public/assets/icon/mail.png');
+    const Whatsapp = path.join(__dirname, '../../public/assets/icon/whatsapp.png');
+    const Email = path.join(__dirname, '../../public/assets/icon/mail.png');
 
     if (Whatsapp) {
         const photoWidth = 10;

@@ -244,6 +244,12 @@
                       <button type="submit" >Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
                     </div>
 
+                    <div>
+                      <button type="button" onclick="onPreview()">
+                        Ön İzleme <i class="fa-solid fa-eye"></i>
+                      </button>
+                    </div>
+
                     <div class="forward__left">
                       <button type="button" onclick="prevStep()">
                         <i class="fa-solid fa-angle-left"></i>
@@ -261,41 +267,21 @@
 
 
 
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
-    // PDF ve JPG dosyalarını oluşturmak için JavaScript fonksiyonu
-    function createPDFAndJPG() {
-        // Form verilerini al
-        const form = document.getElementById('multiStepForm');
-        const formData = new FormData(form);
-
-        // PDF ve JPG dosyalarını oluşturmak için POST isteği gönder
-        fetch('/create-cv-pdf', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Bir hata oluştu');
-            }
-            // PDF ve JPG dosyalarını indir
-            response.blob().then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'cv';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            });
-        })
-        .catch(error => {
-            console.error('Hata:', error);
-            // Hata mesajını kullanıcıya göster
-            alert('İşlem sırasında bir hata oluştu');
-        });
+    function onPreview() {
+      $.get("/get-images", function(data) {
+        // Gelen resim URL'lerini kullanarak istediğiniz işlemi yapabilirsiniz
+        console.log(data);
+        // Burada gelen veriyi işleyerek, örneğin resimleri görüntülemek için bir döngü kullanabilirsiniz
+        for (var i = 0; i < data.length; i++) {
+          var img = document.createElement("img");
+          img.src = data[i];
+          document.body.appendChild(img);
+        }
+      });
     }
-</script>
+  </script>
 
 
   <%- include('./components/footer'); -%>
