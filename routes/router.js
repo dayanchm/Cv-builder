@@ -20,7 +20,7 @@ const {CommentsController} = require("../controller/commentController.js")
 const {SeoController} = require("../controller/seoController.js")
 const { body, validationResult } = require('express-validator');
 const ContactController = require("../controller/contactController.js")
-
+const langController = require('../controller/langController.js');
 const {UserController} = require("../controller/UserController.js")
 
 router.use(authenticateUser);

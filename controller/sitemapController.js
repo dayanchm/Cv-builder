@@ -4,6 +4,9 @@ const { sequelize } = require("../models");
 const Blog = require("../models/blog.model")(sequelize, DataTypes);
 
 
+
+
+
 dotenv.config();
 
 class SitemapController {

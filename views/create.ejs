@@ -24,6 +24,7 @@
   }
 </style>
 
+
 <body>
   <div class="content-wrapper bg-light">
     <%- include('./components/header'); -%>
@@ -36,7 +37,6 @@
                 <ul class="progress-bar">
                   <li class="active icon1 pb-6">Kişisel Bilgiler</li>
                   <li class="icon2 pb-6">İş Bilgiler</li>
-                  <li class="icon3 pb-6">Pdf Oluştur</li>
                   <li class="icon3 pb-6">Son Adım</li>
                 </ul>
                 <div class="step active">
@@ -221,37 +221,6 @@
                   </div>
                 </div>
                 <div class="step">
-                  <h2 class="ha__title">Pdf Oluştur</h2>
-                  <div >
-                    <input type="radio" id="genelSartlarVeGizlilikPolitika" name="genelSartlarVeGizlilikPolitika" required>
-                    <label for="genelSartlarVeGizlilikPolitika">Genel Şartlar ve Gizlilik Politikasını Kabul Ediyorum</label>
-                  </div>
-                  <label for="template">Template Seç</label>
-                  <select name="template" id="template">
-                    <option value="template1">Template 1</option>
-                    <option value="template2">Template 2</option>
-                    <option value="template3">Template 3</option>
-                    <option value="template4">Template 4</option>
-                    <option value="template5">Template 5</option>
-                    <option value="template6">Template 6</option>
-                    <option value="template7">Template 7</option>
-                  </select>
-                  <div class="d-flex flex-column justify-content-center ">
-                    <div>
-                      <button type="submit" onclick="sendRequest()" >Pdf Oluştur <i class="fa-solid fa-download"></i></button>
-                    </div>
-
-                    <div class="forward__left">
-                      <button type="button" onclick="prevStep()">
-                        <i class="fa-solid fa-angle-left"></i>
-                        Geri</button>
-
-                        <button type="button" id="pdfOlusturucuButon" onclick="nextStepWithLoading()">
-                          İleri <i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                  </div>
-                </div>
-                <div class="step" id="lastStep">
                   <h2 class="ha__title">Son Adım</h2>
                   <div >
                     <input type="radio" id="genelSartlarVeGizlilikPolitika" name="genelSartlarVeGizlilikPolitika" required>
@@ -275,12 +244,6 @@
                       <button type="submit" >Özgeçmişi İndir <i class="fa-solid fa-download"></i></button>
                     </div>
 
-                    <div>
-                      <button type="button" onclick="onPreview()">
-                        Ön İzleme <i class="fa-solid fa-eye"></i>
-                      </button>
-                    </div>
-
                     <div class="forward__left">
                       <button type="button" onclick="prevStep()">
                         <i class="fa-solid fa-angle-left"></i>
@@ -298,46 +261,60 @@
 
 
 
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!-- Footer component -->
-  <%- include('./components/footer'); -%>
-  <!-- Font Awesome -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-  <!-- Custom scripts -->
-  <%- include('./components/script'); -%>
   
   <script>
-    function sendRequest() {
-      fetch('/create-cv-pdf', {
+    function nextStepWithLoading() {
+    const formData = new FormData(document.getElementById('multiStepForm'));
+    const jsonData = {};
+    formData.forEach((value, key) => {
+        jsonData[key] = value;
+    });
+
+    fetch('/preview-cv', {
         method: 'POST',
-        // Gerekirse isteğe başlıklar veya diğer veriler ekleyin
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('İstek başarısız');
-        }
-        return response.text();
-      })
-      .then(pdfUrl => {
-        console.log('PDF URL:', pdfUrl);
-        alert('Özgeçmiş başarıyla oluşturuldu!');
-        
-        // PDF'yi göstermek için iframe oluştur
-        var iframe = document.createElement('iframe');
-        iframe.src = pdfUrl;
-        iframe.style.width = '100%';
-        iframe.style.height = '500px';
-        iframe.style.border = 'none';
-        
-        // Son adıma geç
-        document.getElementById('lastStep').appendChild(iframe);
-        document.getElementById('lastStep').scrollIntoView({ behavior: 'smooth' });
-      })
-      .catch(error => {
-        console.error('Hata:', error);
-        alert('Özgeçmiş oluşturulurken bir hata oluştu.');
-      });
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.href = '/preview-cv';
+    })
+    .catch(error => console.error('Error:', error));
+}
+    function createPDFAndJPG() {
+        const form = document.getElementById('multiStepForm');
+        const formData = new FormData(form);
+
+        fetch('/create-cv-pdf', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Bir hata oluştu');
+            }
+            // PDF ve JPG dosyalarını indir
+            response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            // Hata mesajını kullanıcıya göster
+            alert('İşlem sırasında bir hata oluştu');
+        });
     }
-  </script>
+</script>
+
+
+  <%- include('./components/footer'); -%>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
   <%- include('./components/script'); -%>

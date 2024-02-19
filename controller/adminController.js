@@ -114,7 +114,7 @@ class SiteController {
             console.log(error);
             res.status(500).send('Internal Server Error');
         }
-    }
+    };
     static async getSlugBlog(req, res) {
         try {
             const { slug } = req.params;
@@ -144,7 +144,14 @@ class SiteController {
     static async getCookie(req, res) {
         try {
             const Cookiest = await Cookie.findAll();
-            res.render('cookie', { cookieList: Cookiest });
+            const sanitizedList = Cookiest.map((cookie) => {
+                return {
+                    ...cookie.toJSON(),
+                    desc: DOMPurify.sanitize(cookie.desc),
+                };
+            }
+            );
+                res.render('cookie', { cookieList: sanitizedList });
         } catch (error) {
             console.log(error);
             res.status(500).send('Internal Server Error');

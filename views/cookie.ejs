@@ -4,10 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Şartlar ve koşullar">
-  <meta name="keywords"
-    content="Şartlar ve koşullar">
+  <meta name="description" content="Şartlar ve koşullar">
+  <meta name="keywords" content="Şartlar ve koşullar">
   <meta name="author" content="elemis">
   <title>Şartlar ve koşullar</title>
   <link rel="shortcut icon" href="/assets/favicon.ico">
@@ -16,7 +14,9 @@
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="preload" href="/assets/css/fonts/space.css" as="style" onload="this.rel='stylesheet'">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
 </head>
+
 <body>
   <div class="content-wrapper bg-light">
     <%- include('./components/header'); -%>
@@ -47,26 +47,39 @@
               </nav>
             </div>
           </aside>
-          <div class="col-xl-8">
-            <% cookieList.forEach(blog=> { %>
-              <section id="<%=blog.title %>" class="wrapper pt-16">
+          <div class="col-xl-8  mb-22">
+            <% cookieList.forEach(blog => { %>
+              <section id="<%= blog.title %>" class="wrapper pt-16">
                 <div class="card">
                   <div class="card-body p-10">
                     <h2 class="mb-3">
                       <%= blog.title %>
                     </h2>
-                    <%= blog.desc %>
-                      </ul>
+                    <div class="cookieContent">
+                      <%- blog.desc %>
+                    </div>
                   </div>
                 </div>
               </section>
-              <% }); %>
+            <% }); %>
           </div>
         </div>
       </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var cookieContents = document.querySelectorAll('.cookieContent');
+      cookieContents.forEach(function(cookieContent) {
+        cookieContent.innerHTML = DOMPurify.sanitize(cookieContent.innerHTML);
+      });
+    });
+  </script>
+  
   <%- include('./components/footer'); -%>
     <%- include('./components/script'); -%>
+
+
+
 </body>
 
 </html>
