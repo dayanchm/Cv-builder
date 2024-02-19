@@ -81,23 +81,20 @@ router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
             setTimeout(async () => {
                 try {
                     await unlinkAsync(pdfPath);
-                    if (photoBuffer) {
-                        const imgFileName = `photo-${randomString}.png`;
-                        const imgPath = path.join( imgFileName);
+                        const imgPath = path.join(pdfDirectory);
                         await unlinkAsync(imgPath);
-                    }
                 } catch (error) {
                     console.error('Error deleting files:', error);
                 }
-            }, 6000);
+            }, 3000);
 
             return pdfPath;
         });
 
-        const pdfPaths = await Promise.all(pdfPromises);
+        await Promise.all(pdfPromises);
 
 
-        res.json({ pdfPaths });
+        res.send("Success");
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
