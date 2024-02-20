@@ -43,7 +43,18 @@
                                 <a href="<%= image %>" data-glightbox="title" data-gallery="post">
                                     <img src="<%= image %>" alt="Form Veri Canvas" style="width: 100%;">
                                 </a>
-                                <a href="/download-pdf/<%= index %>" class="btn btn-primary">PDF Olarak İndir</a> <!-- PDF indirme butonu -->
+                                <form action="/download" method="get">
+                                  <input type="hidden" name="style" value="<%= index + 1 %>">
+                                  <input type="hidden" name="name" value="<%= name %>">
+                                  <input type="hidden" name="surname" value="<%= surname %>">
+                                  <input type="hidden" name="position" value="<%= position %>">
+                                  <input type="hidden" name="about" value="<%= about %>">
+                                  <input type="hidden" name="photo" accept="image/*" value="<%= photoBuffer %>">
+                                  <label for="style<%= index + 1 %>">
+                                      <input type="radio" id="style<%= index + 1 %>" name="selectedStyle" value="<%= index + 1 %>">
+                                  </label>
+                                  <button type="submit">PDF İndir</button>
+                              </form>
                             </div>
                         <% }); %>
                     <% } %>
