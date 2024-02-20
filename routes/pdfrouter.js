@@ -44,6 +44,53 @@ router.get('/create-cv', (req, res) => {
     images: images });
 });
 
+async function convertToPDF(imageData, filename) {
+    return new Promise((resolve, reject) => {
+        const pdfDoc = new PDFDocument();
+        pdfDoc.pipe(fs.createWriteStream(filename));
+
+        const img = fs.createReadStream(imageData);
+        img.on('error', reject);
+
+        img.pipe(pdfDoc);
+
+        pdfDoc.end();
+        resolve();
+    });
+}
+
+
+router.get('/download-pdf/:index', async (req, res) => {
+    const index = req.params.index;
+    const images = req.session.images; // Örnek olarak, resimlerinizi bir oturumda saklıyoruz
+
+    if (images && index < images.length) {
+        const imageData = images[index];
+        const filename = path.join(pdfDirectory, `image_${index}.pdf`);
+
+        try {
+            await convertToPDF(imageData, filename);
+            res.download(filename, `image_${index}.pdf`, (err) => {
+                if (err) {
+                    console.error('PDF indirilemedi:', err);
+                    res.status(500).send('PDF indirilemedi');
+                } else {
+                    fs.unlink(filename, (err) => {
+                        if (err) {
+                            console.error('Dosya silinemedi:', err);
+                        }
+                    });
+                }
+            });
+        } catch (err) {
+            console.error('PDF oluşturulamadı:', err);
+            res.status(500).send('PDF oluşturulamadı');
+        }
+    } else {
+        res.status(404).send('Dosya bulunamadı');
+    }
+});
+
 router.post('/create-cvs', upload.single('photo'), async (req, res) => {
     const { name, surname, eposta, phonenumber, address, site, position, about, date, posta, city, birth, asker, surucu, medeni, gender } = req.body;
     const photoBuffer = req.file ? req.file.buffer : null;
@@ -80,6 +127,10 @@ router.post('/create-cvs', upload.single('photo'), async (req, res) => {
 
     drawTemplate1();
     drawTemplate2();
+
+    // Resimleri oturum verisine ekle
+    req.session.images = images;
+
     res.render('create-cv', { 
         template,
         name, 
@@ -104,6 +155,8 @@ router.post('/create-cvs', upload.single('photo'), async (req, res) => {
         canvasDataUrl: canvas.toDataURL() // canvasDataUrl burada tanımlanıyor
     });
 });
+
+
 
 
 router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
