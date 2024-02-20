@@ -5,6 +5,7 @@ const PDFDocument = require('pdfkit');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
+const { createCanvas, loadImage } = require('canvas');
 router.use(bodyParser.urlencoded({ extended: true }));
 const applyTemplate1 = require('./template/applyTemplate1');
 const applyTemplate2 = require('./template/applyTemplate2');
@@ -20,6 +21,90 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const pdfDirectory = path.join(__dirname, '../uploads/pdf');
+
+
+router.get('/create-cv', (req, res) => {
+    const images = []; 
+    res.render('create', {
+    name: '', 
+    surname: '',
+    eposta: '',
+    phonenumber: '',
+    address: '',
+    site: '',
+    position: '',
+    about: '',
+    date: '',
+    posta: '',
+    city: '',
+    birth: '',
+    asker: '',
+    surucu: '',
+    medeni: '',
+    images: images });
+});
+
+router.post('/create-cvs', upload.single('photo'), async (req, res) => {
+    const { name, surname, eposta, phonenumber, address, site, position, about, date, posta, city, birth, asker, surucu, medeni, gender } = req.body;
+    const photoBuffer = req.file ? req.file.buffer : null;
+
+    const canvasWidth = 800;
+    const canvasHeight = 600;
+    const template = req.body.template;
+    const images = [];
+    
+    // Canvas oluştur
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+
+    function drawTemplate1() {
+        ctx.fillStyle = 'red';
+        ctx.font = '20px Arial';
+        ctx.fillText(name, 50, 50); // İsimin konumu
+        ctx.fillText(surname, 50, 70); // Soyismin konumu
+        const canvasDataUrl = canvas.toDataURL();
+        images.push(canvasDataUrl);
+    }
+
+    function drawTemplate2() {
+        ctx.fillStyle = 'blue';
+        ctx.font = '20px Arial';
+        const bgColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillText(name, 100, 100); 
+        ctx.fillText(surname, 100, 120);
+        const canvasDataUrl = canvas.toDataURL();
+        images.push(canvasDataUrl);
+    }
+
+    drawTemplate1();
+    drawTemplate2();
+    res.render('create-cv', { 
+        template,
+        name, 
+        surname, 
+        eposta, 
+        phonenumber, 
+        address, 
+        site, 
+        position, 
+        about, 
+        date, 
+        posta, 
+        city, 
+        birth, 
+        asker, 
+        surucu, 
+        medeni, 
+        gender,
+        images: images, 
+        canvasWidth, 
+        canvasHeight ,
+        canvasDataUrl: canvas.toDataURL() // canvasDataUrl burada tanımlanıyor
+    });
+});
+
 
 router.post('/create-cv-pdf', upload.single('photo'), async (req, res) => {
     try {

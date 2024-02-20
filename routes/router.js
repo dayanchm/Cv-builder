@@ -29,7 +29,6 @@ router.use(authenticateUser);
 // Site
 router.get('/', SiteController.getIndexpage);
 router.get('/', SiteController.getIndexFooter);
-router.get('/create-cv', SiteController.getCreate)
 router.get('/resume-cv', SiteController.getResume)
 router.get('/blog',     SiteController.getBlog)
 router.get('/blog/:slug',SiteController.getSlugBlog)
