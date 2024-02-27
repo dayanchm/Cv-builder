@@ -1,7 +1,4 @@
 # Cv-builder
-Project is a CV-builder application developed using Node.js and Express. Finished
-
-
-
+Project is a CV-builder application developed using Node.js and Express. Finished.
 
 
